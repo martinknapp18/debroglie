@@ -52,6 +52,7 @@ MBED_NUCLEO := $(MBED_STM32F746xG)/TARGET_NUCLEO_F746ZG
 
 OBJECTS += main.o
 OBJECTS += drivers/max11300/max11300.o
+OBJECTS += drivers/ad9959/ad9959.o
 
 SYS_OBJECTS += $(MBED)/drivers/AnalogIn.o
 SYS_OBJECTS += $(MBED)/drivers/BusIn.o

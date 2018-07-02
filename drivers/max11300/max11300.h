@@ -55,6 +55,10 @@
  https://www.maximintegrated.com/en/products/analog/data-converters/analog-to-digital-converters/MAX11300.html/tb_tab2
  to generate MAX11300hex.h file
  */
+
+namespace drivers {
+namespace max11300 {
+
 class MAX11300 {
 public:
 
@@ -198,5 +202,8 @@ private:
 	void config_process_2(uint16_t & device_control_local);
 	void config_process_3(void);
 };
+
+}  // namespace drivers
+}  // namespace max11300
 
 #endif /* MAX11300_H_ */

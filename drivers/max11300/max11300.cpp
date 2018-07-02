@@ -34,9 +34,8 @@
 
 namespace {
 constexpr uint32_t MAX_SPI_RATE_HZ = 20000000;
-} // namespace
 
-static const uint16_t port_config_design_vals[20] = {
+constexpr uint16_t port_config_design_vals[20] = {
 port_cfg_00_DESIGNVALUE,
 port_cfg_01_DESIGNVALUE,
 port_cfg_02_DESIGNVALUE,
@@ -58,6 +57,10 @@ port_cfg_17_DESIGNVALUE,
 port_cfg_18_DESIGNVALUE,
 port_cfg_19_DESIGNVALUE };
 
+} // namespace
+
+namespace drivers {
+namespace max11300 {
 
 //*********************************************************************
 MAX11300::MAX11300(SPI & spi_bus, PinName cs, PinName interrupt, PinName cnvt) :
@@ -393,3 +396,5 @@ void MAX11300::config_process_3(void) {
 	}
 }
 
+}  // namespace drivers
+}  // namespace max11300

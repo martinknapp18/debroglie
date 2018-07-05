@@ -68,6 +68,7 @@ void AD9959::set_phase(AD9959::Channel ch, double phase_deg) {
 void AD9959::set_freq_linear_sweep_params(AD9959::Channel ch,
     double start_freq_hz, double end_freq_hz, size_t steps_up,
     size_t steps_down, double step_time_up_s, double step_time_down_s) {
+  MBED_ASSERT((ch & Channel0) | (ch & Channel1));
   set_csr(ch);
 
   set_fr1(AD9959::ModLevel::two);
@@ -103,28 +104,31 @@ void AD9959::set_freq_linear_sweep_params(AD9959::Channel ch,
   write_register(AD9959::LSRR, lsrr_val.bits);
 }
 
-// TODO(bsm): check for proper channels and use the right pin
 void AD9959::start_linear_sweep_up(Channel ch) {
-  p0_ = 1;
-  p1_ = 1;
+  if (ch & Channel0) {
+    p0_ = 1;
+  }
+  if (ch & Channel1) {
+    p1_ = 1;
+  }
 }
 
 void AD9959::start_linear_sweep_down(Channel ch) {
-  p0_ = 0;
-  p1_ = 0;
+  if (ch & Channel0) {
+    p0_ = 0;
+  }
+  if (ch & Channel1) {
+    p1_ = 0;
+  }
 }
 
 
 void AD9959::write_register(AD9959::Register reg, uint32_t value) {
   lower(cs_);
   spi_bus_.write(reg);
-  // printf("\nreg: 0x%x\n", reg);
-  // printf("val: 0x%x\n", value);
   int len = register_width[reg];
-  // printf("len: %d\n", len);
   while (len-- > 0) {
     uint8_t byte = (value >> (len * 8)) & 0xFF;
-    // printf("byte: 0x%x\n", byte);
     spi_bus_.write(byte);
   }
   raise(cs_);

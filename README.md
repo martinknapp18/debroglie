@@ -1,4 +1,4 @@
-# De Broglie ~ A mobile control System for AMO experiments
+# De Broglie ~ Taking AMO outside the lab
 
 This project supports an mbed based application to run AMO experiments. It has been developed and tested on an STM32F47GZ development board. 
 

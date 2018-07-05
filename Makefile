@@ -253,7 +253,7 @@ INCLUDE_PATHS += -I../$(MBED)/platform
 
 LIBRARY_PATHS := -L../$(MBED_STM32F746xG)/device/TOOLCHAIN_GCC_ARM
 # LIBRARIES := -l$(MBED) 
-LINKER_SCRIPT ?= ../$(MBED_STM32F746xG)/device/TOOLCHAIN_GCC_ARM/STM32F746xG.ld
+LINKER_SCRIPT ?= ../STM32F746xG.ld
 
 # Objects and Paths
 ###############################################################################

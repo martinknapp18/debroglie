@@ -20,8 +20,9 @@ void pulse(DigitalOut pin) {
 
 namespace drivers {
 namespace ad9959 {
+constexpr int AD9959::register_width[AD9959::NUM_REGISTERS];
 
-AD9959::AD9959(SPI & spi_bus, Pins & pins, uint32_t ref_freq, uint8_t mult) :
+AD9959::AD9959(SPI & spi_bus, const Pins & pins, uint32_t ref_freq, uint8_t mult) :
   sys_clk_{ref_freq * mult},
   mult_{mult},
   sync_clk_{sys_clk_ / 4},
@@ -102,12 +103,28 @@ void AD9959::set_freq_linear_sweep_params(AD9959::Channel ch,
   write_register(AD9959::LSRR, lsrr_val.bits);
 }
 
+// TODO(bsm): check for proper channels and use the right pin
+void AD9959::start_linear_sweep_up(Channel ch) {
+  p0_ = 1;
+  p1_ = 1;
+}
+
+void AD9959::start_linear_sweep_down(Channel ch) {
+  p0_ = 0;
+  p1_ = 0;
+}
+
+
 void AD9959::write_register(AD9959::Register reg, uint32_t value) {
   lower(cs_);
   spi_bus_.write(reg);
+  // printf("\nreg: 0x%x\n", reg);
+  // printf("val: 0x%x\n", value);
   int len = register_width[reg];
+  // printf("len: %d\n", len);
   while (len-- > 0) {
-    uint8_t byte = (value >> len * 8) & 0xFF;
+    uint8_t byte = (value >> (len * 8)) & 0xFF;
+    // printf("byte: 0x%x\n", byte);
     spi_bus_.write(byte);
   }
   raise(cs_);

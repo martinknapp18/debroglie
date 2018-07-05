@@ -21,10 +21,10 @@ class AD9959 {
 public:
   enum Channel {
     ChannelNone = 0x0,
-    Channel0 = 0x1,
-    Channel1 = 0x2,
-    Channel2 = 0x4,
-    Channel3 = 0x8,
+    Channel0 = 1 << 0,
+    Channel1 = 1 << 1,
+    Channel2 = 1 << 2,
+    Channel3 = 1 << 3,
     ChannelAll = 0xF,
   };
 
@@ -36,7 +36,7 @@ public:
     PinName Profile1Pin;
   };
 
-  AD9959(SPI & spi_bus, Pins & pins, uint32_t ref_freq, uint8_t mult);
+  AD9959(SPI & spi_bus, const Pins & pins, uint32_t ref_freq, uint8_t mult);
 
   void init();
   void reset();
@@ -47,6 +47,8 @@ public:
       double start_freq_hz, double end_freq_hz,
       size_t steps_up, size_t steps_down,
       double step_time_up_s, double step_time_down_s);
+  void start_linear_sweep_up(Channel ch);
+  void start_linear_sweep_down(Channel ch);
 
 private:
   uint32_t sys_clk_; 
@@ -122,8 +124,7 @@ private:
     4, //CW13
     4, //CW14
     4, //CW15
-};
-
+  };
 
   enum SerialMode {
     // Serial I/O Modes (default IO2Wire):
@@ -304,10 +305,9 @@ private:
     uint32_t bits;
   } fdw_t;
 
-
 };
 
-}  // namespace drivers
 }  // namespace ad9959
+}  // namespace drivers
 
 #endif  /* _AD9959_H_ */

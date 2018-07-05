@@ -44,7 +44,7 @@ MBED := mbed-os
 MBED_STM := $(MBED)/targets/TARGET_STM
 MBED_STM32F7 := $(MBED_STM)/TARGET_STM32F7
 MBED_STM32F746xG := $(MBED_STM32F7)/TARGET_STM32F746xG
-MBED_NUCLEO := $(MBED_STM32F746xG)/TARGET_NUCLEO_F746ZG
+BSP := bsp
 
 # Project settings
 ###############################################################################
@@ -235,8 +235,8 @@ SYS_OBJECTS += $(MBED_STM32F7)/spi_api.o
 
 SYS_OBJECTS += $(MBED_STM32F746xG)/device/TOOLCHAIN_GCC_ARM/startup_stm32f746xx.o
 
-SYS_OBJECTS += $(MBED_NUCLEO)/PeripheralPins.o
-SYS_OBJECTS += $(MBED_NUCLEO)/system_clock.o
+SYS_OBJECTS += $(BSP)/PeripheralPins.o
+SYS_OBJECTS += $(BSP)/system_clock.o
 
 INCLUDE_PATHS += -I../
 INCLUDE_PATHS += -I../.
@@ -251,7 +251,7 @@ INCLUDE_PATHS += -I../$(MBED_STM32F7)/device/.
 INCLUDE_PATHS += -I../$(MBED_STM32F746xG)/.
 INCLUDE_PATHS += -I../$(MBED_STM32F746xG)/device/.
 INCLUDE_PATHS += -I../$(MBED_STM32F746xG)/device/TOOLCHAIN_GCC_ARM/.
-INCLUDE_PATHS += -I../$(MBED_STM32F746xG)/TARGET_NUCLEO_F746ZG/.
+INCLUDE_PATHS += -I../$(BSP)
 
 INCLUDE_PATHS += -I../$(MBED)/drivers
 INCLUDE_PATHS += -I../$(MBED)/hal
@@ -259,7 +259,7 @@ INCLUDE_PATHS += -I../$(MBED)/platform
 
 LIBRARY_PATHS := -L../$(MBED_STM32F746xG)/device/TOOLCHAIN_GCC_ARM
 # LIBRARIES := -l$(MBED) 
-LINKER_SCRIPT ?= ../STM32F746xG.ld
+LINKER_SCRIPT ?= ../$(BSP)/STM32F746xG.ld
 
 # Objects and Paths
 ###############################################################################

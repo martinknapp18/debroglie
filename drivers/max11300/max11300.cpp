@@ -33,7 +33,7 @@
 #include "max11300.h"
 
 namespace {
-constexpr uint32_t MAX_SPI_RATE_HZ = 20000000;
+constexpr uint32_t MAX_SPI_RATE_HZ = 12500000;
 
 constexpr uint16_t port_config_design_vals[20] = {
     port_cfg_00_DESIGNVALUE, port_cfg_01_DESIGNVALUE, port_cfg_02_DESIGNVALUE,

@@ -18,6 +18,35 @@ void AnalogOperations::set_voltage(MAX11300 &pixi,
   MBED_ASSERT(result == MAX11300::CmdResult::Success);
 }
 
+void AnalogOperations::multi_port_ramp(MAX11300 &pixi, RampParams *ramps,
+                                       size_t num_ramps, uint32_t num_steps,
+                                       uint32_t ramp_time_us) {
+  int32_t pre_delay = ramp_time_us / num_steps - num_ramps*3*8*10;
+  uint32_t delay = 0;
+  if (pre_delay > 0) {
+    delay = static_cast<uint32_t>(pre_delay);
+  }
+
+  for (size_t i = 0; i < num_ramps; i++) {
+    ramps[i].step_size =
+        (ramps[i].end_voltage - ramps[i].start_voltage) / num_steps;
+
+    if (ramps[i].step_size == 0) {
+      ramps[i].step_size = 1;
+    }
+  }
+  while (num_steps > 0) {
+    for (size_t i = 0; i < num_ramps; i++) {
+        ramps[i].start_voltage += ramps[i].step_size;
+        auto result =
+            pixi.single_ended_dac_write(ramps[i].port,to_dac(ramps[i].start_voltage));
+        MBED_ASSERT(result == MAX11300::CmdResult::Success);
+    }
+    wait_us(delay);
+    num_steps--;
+  }
+}
+
 void AnalogOperations::ramp_voltage(MAX11300 &pixi,
                                     MAX11300::MAX11300_Ports port,
                                     double start_voltage, double end_voltage,

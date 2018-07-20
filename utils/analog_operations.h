@@ -7,9 +7,21 @@
 namespace utils {
 class AnalogOperations {
 public:
+  struct RampParams {
+    drivers::max11300::MAX11300::MAX11300_Ports port;
+    double start_voltage;
+    double end_voltage;
+    double step_size;
+  };
+
   static void set_voltage(drivers::max11300::MAX11300 &pixi,
                           drivers::max11300::MAX11300::MAX11300_Ports port,
                           double voltage);
+
+  // Assumes set voltage has already been called to  have everything at start_voltage.
+  static void multi_port_ramp(drivers::max11300::MAX11300 &pixi,
+                              RampParams *ramps, size_t num_ramps, uint32_t num_steps,
+                              uint32_t ramp_time_us);
 
   static void ramp_voltage(drivers::max11300::MAX11300 &pixi,
                            drivers::max11300::MAX11300::MAX11300_Ports port,

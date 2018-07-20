@@ -1261,7 +1261,8 @@ dac_data_port_19 = 0x73,
 #define port_cfg_18_funcprm_range 	0x0700
 #define port_cfg_18_funcprm_nsamples 	0x00e0
 #define port_cfg_18_funcprm_port 	0x001f
-#define port_cfg_18_DESIGNVALUE 	0x0000
+// #define port_cfg_18_DESIGNVALUE 	0x3000
+#define port_cfg_18_DESIGNVALUE 	0x5100
 
 /// 0x33 r/w port_cfg_19 PIXI port 19 configuration register
 /// <code>1111xxxxxxxxxxxx</code> PortCfgFuncID Port function / mode
@@ -1274,7 +1275,7 @@ dac_data_port_19 = 0x73,
 #define port_cfg_19_funcprm_range 	0x0700
 #define port_cfg_19_funcprm_nsamples 	0x00e0
 #define port_cfg_19_funcprm_port 	0x001f
-#define port_cfg_19_DESIGNVALUE 	0x0000
+#define port_cfg_19_DESIGNVALUE 	0x5100
 
 /// 0x40 r/o adc_data_port_00 PIXI port 0 Analog to Digital Converter register
 /// <code>xxxx111111111111</code> adccode 12-bit ADC code

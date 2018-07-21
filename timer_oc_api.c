@@ -7,6 +7,62 @@
 #include "pwmout_device.h"
 
 static TIM_HandleTypeDef TimHandle;
+/* Definition for TIMx clock resources */
+#define DMAx_CLK_ENABLE __HAL_RCC_DMA1_CLK_ENABLE
+
+/* Definition for TIMx's DMA */
+#define TIMx_CC3_DMA_INST DMA1_Stream7
+
+/* Definition for ADCx's NVIC */
+#define TIMx_DMA_IRQn DMA1_Stream7_IRQn
+#define TIMx_DMA_IRQHandler DMA1_Stream7_IRQHandler
+
+void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim) {
+  static DMA_HandleTypeDef hdma_tim;
+
+  /* Enable DMA clock */
+  DMAx_CLK_ENABLE();
+
+  /* Set the parameters to be configured */
+  hdma_tim.Init.Channel = DMA_CHANNEL_5;
+  hdma_tim.Init.Direction = DMA_MEMORY_TO_PERIPH;
+  hdma_tim.Init.PeriphInc = DMA_PINC_DISABLE;
+  hdma_tim.Init.MemInc = DMA_MINC_ENABLE;
+  hdma_tim.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+  hdma_tim.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+  hdma_tim.Init.Mode = DMA_CIRCULAR;
+  hdma_tim.Init.Priority = DMA_PRIORITY_HIGH;
+  hdma_tim.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+  hdma_tim.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+  hdma_tim.Init.MemBurst = DMA_MBURST_SINGLE;
+  hdma_tim.Init.PeriphBurst = DMA_PBURST_SINGLE;
+
+  /* Set hdma_tim instance */
+  hdma_tim.Instance = TIMx_CC3_DMA_INST;
+
+  /* Link hdma_tim to hdma[TIM_DMA_ID_CC3] (channel3) */
+  __HAL_LINKDMA(htim, hdma[TIM_DMA_ID_CC3], hdma_tim);
+
+  /* Initialize TIMx DMA handle */
+  HAL_DMA_Init(htim->hdma[TIM_DMA_ID_CC3]);
+
+  /*##-2- Configure the NVIC for DMA #########################################*/
+  /* NVIC configuration for DMA transfer complete interrupt */
+  HAL_NVIC_SetPriority(TIMx_DMA_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(TIMx_DMA_IRQn);
+}
+
+
+/**
+* @brief  This function handles DMA interrupt request.
+* @param  None
+* @retval None
+*/
+void TIMx_DMA_IRQHandler(void)
+{
+  HAL_DMA_IRQHandler(TimHandle.hdma[TIM_DMA_ID_CC3]);
+}
+
 
 void timer_oc_init(timer_oc_t *obj, PinName pin) {
   // Get the peripheral name from the pin and assign it to the object
@@ -211,7 +267,7 @@ void timer_oc_start(timer_oc_t *obj, int us_period, int num_repetitions,
     ticks[i] = ticks[i] / obj->prescaler;
   }
 
-  if (HAL_TIM_PWM_Init(&TimHandle) != HAL_OK) {
+  if (HAL_TIM_OC_Init(&TimHandle) != HAL_OK) {
     error("Cannot initialize OC\n");
   }
 
@@ -252,7 +308,7 @@ void timer_oc_start(timer_oc_t *obj, int us_period, int num_repetitions,
     return;
   }
 
-  if (HAL_TIM_PWM_ConfigChannel(&TimHandle, &sConfig, channel) != HAL_OK) {
+  if (HAL_TIM_OC_ConfigChannel(&TimHandle, &sConfig, channel) != HAL_OK) {
     error("Cannot initialize OC\n");
   }
 
@@ -262,16 +318,13 @@ void timer_oc_start(timer_oc_t *obj, int us_period, int num_repetitions,
   } else
 #endif
   {
-    if (HAL_TIM_PWM_Start_DMA(&TimHandle, channel, &ticks[1], num_repetitions) != HAL_OK) {
+    if (HAL_TIM_OC_Start_DMA(&TimHandle, channel, &ticks[1], num_repetitions) != HAL_OK) {
       error("Cannot start DMA\n");
     }
   }
-  wait_ms(210);
-  timer_oc_stop(obj);
 }
 
 void timer_oc_stop(timer_oc_t *obj) {
-  printf("stopping 1\n");
   TimHandle.Instance = (TIM_TypeDef *)(obj->pwm);
   int channel = 0;
   switch (obj->channel) {
@@ -291,7 +344,7 @@ void timer_oc_stop(timer_oc_t *obj) {
     return;
   }
 
-  if (HAL_TIM_PWM_Stop_DMA(&TimHandle, channel) != HAL_OK) {
+  if (HAL_TIM_OC_Stop_DMA(&TimHandle, channel) != HAL_OK) {
     error("Cannot start DMA\n");
   }
 }

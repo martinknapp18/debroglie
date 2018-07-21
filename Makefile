@@ -275,6 +275,7 @@ ELF2BIN = 'arm-none-eabi-objcopy'
 PREPROC = 'arm-none-eabi-cpp' '-E' '-P' '-Wl,--gc-sections' '-Wl,--wrap,main' '-Wl,--wrap,_malloc_r' '-Wl,--wrap,_free_r' '-Wl,--wrap,_realloc_r' '-Wl,--wrap,_memalign_r' '-Wl,--wrap,_calloc_r' '-Wl,--wrap,exit' '-Wl,--wrap,atexit' '-Wl,-n' '-mcpu=cortex-m7' '-mthumb' '-mfpu=fpv5-sp-d16' '-mfloat-abi=softfp'
 
 
+C_FLAGS += -ggdb3
 C_FLAGS += -std=gnu99
 C_FLAGS += -DDEVICE_SPI=1
 C_FLAGS += -DTARGET_STM32F746xG
@@ -331,6 +332,7 @@ C_FLAGS += -include
 C_FLAGS += mbed_config.h
 C_FLAGS += -DDEBUG
 
+CXX_FLAGS += -ggdb3
 CXX_FLAGS += -std=gnu++11
 CXX_FLAGS += -fno-rtti
 CXX_FLAGS += -Wvla

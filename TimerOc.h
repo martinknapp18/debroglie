@@ -41,10 +41,9 @@ public:
   }
 
   void stop() {
-    printf("before cs\n");
     core_util_critical_section_enter();
-    lock_deep_sleep();
     timer_oc_stop(&_timer_oc);
+    unlock_deep_sleep();
     core_util_critical_section_exit();
   }
 

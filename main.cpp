@@ -1,31 +1,25 @@
-#include "TimerOc.h"
 #include "mbed.h"
 #include "minig.h"
+#include "bsm_delay.h"
 
-DigitalOut blue{LED2};
-Ticker led_ticker;
+#define RUN_MINIG 0
 
-void toggle_led() {
-  static int i = 0;
-  blue = i & 1;
-  i++;
-}
-
-uint32_t ticks[4] = {4, 8, 4, 4};
-
-// MiniG minig;
 int main() {
-  led_ticker.attach(toggle_led, .2);
   printf("\nhello debugging!\n");
 
-  // minig.init();
+#if RUN_MINIG
+  MiniG minig;
+  minig.init();
+  while (1) {
+    minig.run();
+  }
+#endif
 
-  TimerOc timer_oc{PB_0_ALT0};
-  timer_oc.start(100000 /* us*/, 3, ticks);
-  wait_ms(210);
-  timer_oc.stop();
+  DigitalOut pg_5{PG_5, 0};
+  DigitalOut pg_6{PG_6, 1};
 
   while (1) {
-    // minig.run();
+    bsm_delay_us(4);
+    GPIOG->ODR ^= GPIO_PIN_5 | GPIO_PIN_6;
   }
 }

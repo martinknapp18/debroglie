@@ -5,6 +5,7 @@
 
 #include "drivers/ad9959/ad9959.h"
 #include "drivers/max11300/max11300.h"
+#include "TimerOc.h"
 
 class MiniG {
 public:
@@ -16,15 +17,18 @@ private:
   void reset();
   void mot();
   void pgc();
-  void mw();
-  void interferometry(uint32_t T);
+  void mw(int pulse);
+  void interferometry(uint32_t T, uint32_t fall);
   void image();
+
+  // Precise Timing
+  TimerOc ao_2_raman_;
 
   DigitalOut coils_;
   DigitalOut liquid_crystal_1_;
   DigitalOut under_vac_shutter_;
-  DigitalOut ao_2_;
   DigitalOut ao_3_;
+  DigitalOut ao_2_;
   DigitalOut cooling_shutter_;
   DigitalOut mot_eo_;
   DigitalOut raman_eo_;
@@ -37,7 +41,7 @@ private:
   DigitalOut dds_trigger_2_;
 
   // Debugging Utils
-  DigitalOut oscillscope_trigger_;
+  DigitalOut scope_;
 
   DigitalOut camera_ttl_;
 
@@ -59,8 +63,12 @@ private:
   SPI dds_spi_;
   drivers::ad9959::AD9959 dds_;
 
+  DigitalOut pixi_cs_;
   SPI pixi_spi_;
   drivers::max11300::MAX11300 pixi_;
+  
+  // Timer for debug 
+  Timer timer_;
 };
 
 #endif // _EXPERIMENT_MINIG_H_

@@ -1,18 +1,32 @@
 #ifndef _BSM_DELAY_H_
 #define _BSM_DELAY_H_
-// This is calibrated and optimized. Tested at 1us, 4us, 8us, 100us, and 1ms
-#define bsm_delay_us(us)                                                        \
-  do {                                                                         \
-    asm volatile("MOV R0,%[loops]\n\t"                                         \
-                 "1: \n\t"                                                     \
-                 "SUB R0, #1\n\t"                                              \
-                 "CMP R0, #0\n\t"                                              \
-                 "BNE 1b \n\t"                                                 \
-                 :                                                             \
-                 : [loops] "r"(108 * us - 5)                                   \
-                 : "memory");                                                  \
-  } while (0)
 
-#define bsm_delay_ms(ms) bsm_delay_us(ms * 1000)
+#include <stdint.h>
+#include <system_stm32f7xx.h>
+#include "mbed.h"
+#include <core_cm7.h>
+#include <math.h>
 
-#endif  // _BSM_DELAY_H_
+
+inline void enableCycleCounter() {
+  CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+
+  DWT->LAR = 0xC5ACCE55;
+  DWT->CYCCNT = 0;
+  DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+}
+
+inline void delayCycles(uint32_t const numCycles) {
+  uint32_t const startCycles = DWT->CYCCNT;
+  while ((DWT->CYCCNT - startCycles) < numCycles) {
+  }
+}
+
+inline uint32_t usToCycles(uint32_t const us) {
+  return ceil(us * ((float)SystemCoreClock / 1e6f)) - 16;
+}
+
+inline void bsm_delay_us(uint32_t const us) { delayCycles(usToCycles(us)); }
+inline void bsm_delay_ms(uint32_t const ms) { delayCycles(usToCycles(ms * 1000)); }
+
+#endif // _BSM_DELAY_H_

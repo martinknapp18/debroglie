@@ -13,11 +13,11 @@ public:
   void run();
 
 private:
-  void reset();
+  void reset(float we);
   void mot();
   void pgc();
   void mw(int pulse);
-  void interferometry(uint32_t T, float fall);
+  void interferometry(uint32_t T, uint32_t fall);
   void image();
   void set_dds_params(double delta);
 

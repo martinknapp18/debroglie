@@ -129,6 +129,7 @@ public:
   };
   
   struct RampAction {
+    uint8_t configured;
     size_t num_ramps;
     uint32_t num_steps;
     uint32_t step_time_us; // Might be unused

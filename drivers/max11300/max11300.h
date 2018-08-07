@@ -122,11 +122,18 @@ public:
     Success
   };
 
-  static const uint16_t MODE_BITMASK_PROCESS_1 = 0x047A;
-
-  static const uint16_t MODE_BITMASK_PROCESS_2 = 0x0380;
-
-  static const uint16_t MODE_BITMASK_PROCESS_3 = 0x1804;
+  struct Ramp {
+    MAX11300_Ports port;
+    int16_t start_dac;
+    int16_t end_dac;
+  };
+  
+  struct RampAction {
+    size_t num_ramps;
+    uint32_t num_steps;
+    uint32_t step_time_us; // Might be unused
+    uint8_t* ramp_id; // Set by the driver
+  };
 
   ///@brief MAX11300 Constructor
   ///@param[in] spi_bus - reference to SPI bus for this device
@@ -189,11 +196,18 @@ public:
   ///@return Result of operation
   CmdResult single_ended_dac_write(MAX11300_Ports port, uint16_t data);
 
+  void prepare_ramps(RampAction* ramp_action, Ramp* ramps);
+  void run_ramps(RampAction* ramp_action);
+
 private:
   SPI &m_spi_bus;
   DigitalOut m_cs;
   InterruptIn m_int;
   DigitalOut m_cnvt;
+  volatile uint8_t m_xfer_done;
+  size_t m_ramp_offset;
+
+  void spi_cb(int event);
 
   void config_process_1(uint16_t &device_control_local);
   void config_process_2(uint16_t &device_control_local);

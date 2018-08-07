@@ -31,9 +31,16 @@
  **********************************************************************/
 
 #include "max11300.h"
+#include "bsm_delay.h"
 
 namespace {
-constexpr uint32_t MAX_SPI_RATE_HZ = 12500000;
+constexpr uint32_t MAX_SPI_RATE_HZ = 27000000;
+
+constexpr uint16_t MODE_BITMASK_PROCESS_1 = 0x047A;
+
+constexpr uint16_t MODE_BITMASK_PROCESS_2 = 0x0380;
+
+constexpr uint16_t MODE_BITMASK_PROCESS_3 = 0x1804;
 
 constexpr uint16_t port_config_design_vals[20] = {
     port_cfg_00_DESIGNVALUE, port_cfg_01_DESIGNVALUE, port_cfg_02_DESIGNVALUE,
@@ -44,6 +51,17 @@ constexpr uint16_t port_config_design_vals[20] = {
     port_cfg_15_DESIGNVALUE, port_cfg_16_DESIGNVALUE, port_cfg_17_DESIGNVALUE,
     port_cfg_18_DESIGNVALUE, port_cfg_19_DESIGNVALUE};
 
+uint8_t reg_data_buf[3];
+
+// The following buffer will be precomputed and saved for ramps to properly ramp
+// fast enough. Doing the computation on the fly takes too much and has too much
+// variability depending on what's going on in the the cpu at that time.
+// Current usage in the minig experiment:
+// 3*30 + 4 * 60 + 6 * 50 + 6 * 130 + 3*80
+constexpr size_t RAMP_BUFFER_SIZE =
+    3 * (3 * 30 + 4 * 60 + 6 * 50 + 6 * 130 + 3 * 80);
+uint8_t ramp_buffer[RAMP_BUFFER_SIZE];
+
 } // namespace
 
 namespace drivers {
@@ -51,18 +69,29 @@ namespace max11300 {
 
 //*********************************************************************
 MAX11300::MAX11300(SPI &spi_bus, PinName cs, PinName interrupt, PinName cnvt)
-    : m_spi_bus(spi_bus), m_cs(cs, 1), m_int(interrupt), m_cnvt(cnvt, 1) {}
+    : m_spi_bus(spi_bus), m_cs(cs, 1), m_int(interrupt), m_cnvt(cnvt, 1),
+      m_xfer_done(0), m_ramp_offset(0) {}
 
 //*********************************************************************
 MAX11300::~MAX11300() {}
 
 //*********************************************************************
-void MAX11300::write_register(MAX11300RegAddress_t reg, uint16_t data) {
-  m_cs = 0;
-  m_spi_bus.write(MAX11300Addr_SPI_Write(reg));
-  m_spi_bus.write(((0xFF00 & data) >> 8));
-  m_spi_bus.write((0x00FF & data));
+void MAX11300::spi_cb(int event) {
   m_cs = 1;
+  m_xfer_done = 1;
+}
+
+//*********************************************************************
+void MAX11300::write_register(MAX11300RegAddress_t reg, uint16_t data) {
+  reg_data_buf[0] = MAX11300Addr_SPI_Write(reg);
+  reg_data_buf[1] = ((0xFF00 & data) >> 8);
+  reg_data_buf[2] = (0x00FF & data);
+  m_xfer_done = 0;
+  m_cs = 0;
+  m_spi_bus.transfer(static_cast<const uint8_t *>(reg_data_buf), 3,
+                     static_cast<uint8_t *>(NULL), 0,
+                     Callback<void(int)>(this, &MAX11300::spi_cb));
+  while (!m_xfer_done);
 }
 
 //*********************************************************************
@@ -177,6 +206,55 @@ MAX11300::CmdResult MAX11300::single_ended_dac_write(MAX11300_Ports port,
   }
 
   return result;
+}
+
+void MAX11300::prepare_ramps(RampAction *ramp_action, Ramp* ramps) {
+  MBED_ASSERT(ramp_action->num_ramps * ramp_action->num_steps * 3 <
+              RAMP_BUFFER_SIZE - m_ramp_offset);
+  ramp_action->ramp_id = &ramp_buffer[m_ramp_offset];
+  size_t step_offset = 3 * ramp_action->num_ramps;
+  for (size_t idx = 0; idx < ramp_action->num_ramps; idx++) {
+    Ramp ramp = ramps[idx];
+    float step_size = static_cast<float>(ramp.end_dac - ramp.start_dac) /
+                      ramp_action->num_steps;
+    uint8_t reg_addr = MAX11300Addr_SPI_Write(
+        static_cast<MAX11300RegAddress_t>(dac_data_port_00 + ramp.port));
+    for (uint32_t step = 0; step < ramp_action->num_steps; step++) {
+      uint16_t dac_value = static_cast<uint16_t>(ramp.start_dac + static_cast<int16_t>((step + 1) * step_size));
+      ramp_buffer[m_ramp_offset + idx * 3 + step * step_offset] = reg_addr;
+
+      ramp_buffer[m_ramp_offset + idx * 3 + step * step_offset + 1] =
+          ((0xFF00 & dac_value) >> 8);
+      ramp_buffer[m_ramp_offset + idx * 3 + step * step_offset + 2] =
+          (0x00FF & dac_value);
+    }
+  }
+  uint32_t written_data_size =
+      3 * ramp_action->num_ramps * ramp_action->num_steps;
+  SCB_CleanDCache_by_Addr(
+      reinterpret_cast<uint32_t *>(&ramp_buffer[m_ramp_offset]),
+      written_data_size);
+  m_ramp_offset += written_data_size;
+}
+
+void MAX11300::run_ramps(RampAction *ramp_action) {
+  // TODO(bsm): maybe add a check here that it's a valid write address?
+  uint8_t *write_buffer = ramp_action->ramp_id;
+  uint8_t *end_write_addr = reinterpret_cast<uint8_t *>(
+      write_buffer + 3 * ramp_action->num_ramps * ramp_action->num_steps);
+  MBED_ASSERT(ramp_action->step_time_us >= 100);
+  // @ 27MHz, it takes about 2us to send these 3 bytes. 
+  int32_t wait_time_us = ramp_action->step_time_us / ramp_action->num_ramps - 10;
+  MBED_ASSERT(wait_time_us >= 0);
+  for (; write_buffer < end_write_addr; write_buffer += 3) {
+    m_cs = 0;
+    m_xfer_done = 0;
+    m_spi_bus.transfer(static_cast<const uint8_t *>(write_buffer), 3,
+                       static_cast<uint8_t *>(NULL), 0,
+                       Callback<void(int)>(this, &MAX11300::spi_cb));
+    while (!m_xfer_done);
+    bsm_delay_us(static_cast<uint32_t>(wait_time_us));
+  }
 }
 
 //*********************************************************************

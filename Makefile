@@ -57,10 +57,6 @@ OBJECTS += main.o
 OBJECTS += drivers/max11300/max11300.o
 OBJECTS += drivers/ad9959/ad9959.o
 OBJECTS += minig.o
-OBJECTS += timer_oc_api.o
-
-# utilities
-OBJECTS += utils/analog_operations.o
 
 SYS_OBJECTS += $(MBED)/drivers/AnalogIn.o
 SYS_OBJECTS += $(MBED)/drivers/BusIn.o

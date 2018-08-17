@@ -1,7 +1,7 @@
 #include "ad9959.h"
 
 namespace {
-constexpr uint32_t SpiRate = 2000000; // 2Mb/s
+constexpr uint32_t SpiRate = 27000000; // 27Mb/s
 void lower(DigitalOut pin) { pin = 0; }
 
 void raise(DigitalOut pin) { pin = 1; }
@@ -81,6 +81,7 @@ void AD9959::set_freq_linear_sweep_params(AD9959::Channel ch,
   AD9959::rdw_t rising_val;
   rising_val.rising_delta_word =
       freqToHEX((end_freq_hz - start_freq_hz) / steps_up);
+  // printf("falling word: %lu\n", rising_val.rising_delta_word);
   write_register(AD9959::RDW, rising_val.bits);
 
   AD9959::fdw_t falling_val;
@@ -91,6 +92,7 @@ void AD9959::set_freq_linear_sweep_params(AD9959::Channel ch,
   AD9959::lsrr_t lsrr_val;
   lsrr_val.rising_sweep_ramp_rate = timeToHex(step_time_up_s);
   lsrr_val.falling_sweep_ramp_rate = timeToHex(step_time_down_s);
+  // printf("falling time: %u\n", lsrr_val.rising_sweep_ramp_rate);
   write_register(AD9959::LSRR, lsrr_val.bits);
 }
 

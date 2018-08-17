@@ -199,16 +199,18 @@ public:
 
   void prepare_ramps(RampAction* ramp_action, Ramp* ramps);
   void run_ramps(RampAction* ramp_action);
+  void max_speed_adc_read(MAX11300_Ports port, uint16_t* value, size_t num_samples);
 
 private:
   SPI &m_spi_bus;
   DigitalOut m_cs;
   InterruptIn m_int;
   DigitalOut m_cnvt;
-  volatile uint8_t m_xfer_done;
+  volatile uint8_t m_write_done;
   size_t m_ramp_offset;
 
-  void spi_cb(int event);
+  void spi_write_cb(int event);
+  void spi_read_cb(int event);
 
   void config_process_1(uint16_t &device_control_local);
   void config_process_2(uint16_t &device_control_local);

@@ -34,7 +34,7 @@
 #include "max11300.h"
 
 namespace {
-constexpr uint32_t MAX_SPI_RATE_HZ = 27000000;
+constexpr uint32_t WRITE_SPI_RATE_HZ = 27000000;
 
 constexpr uint16_t MODE_BITMASK_PROCESS_1 = 0x047A;
 
@@ -70,15 +70,15 @@ namespace max11300 {
 //*********************************************************************
 MAX11300::MAX11300(SPI &spi_bus, PinName cs, PinName interrupt, PinName cnvt)
     : m_spi_bus(spi_bus), m_cs(cs, 1), m_int(interrupt), m_cnvt(cnvt, 1),
-      m_xfer_done(0), m_ramp_offset(0) {}
+      m_write_done(0), m_ramp_offset(0) {}
 
 //*********************************************************************
 MAX11300::~MAX11300() {}
 
 //*********************************************************************
-void MAX11300::spi_cb(int event) {
+void MAX11300::spi_write_cb(int event) {
   m_cs = 1;
-  m_xfer_done = 1;
+  m_write_done = 1;
 }
 
 //*********************************************************************
@@ -86,12 +86,12 @@ void MAX11300::write_register(MAX11300RegAddress_t reg, uint16_t data) {
   reg_data_buf[0] = MAX11300Addr_SPI_Write(reg);
   reg_data_buf[1] = ((0xFF00 & data) >> 8);
   reg_data_buf[2] = (0x00FF & data);
-  m_xfer_done = 0;
+  m_write_done = 0;
   m_cs = 0;
   m_spi_bus.transfer(static_cast<const uint8_t *>(reg_data_buf), 3,
                      static_cast<uint8_t *>(NULL), 0,
-                     Callback<void(int)>(this, &MAX11300::spi_cb));
-  while (!m_xfer_done)
+                     Callback<void(int)>(this, &MAX11300::spi_write_cb));
+  while (!m_write_done)
     ;
 }
 
@@ -246,8 +246,6 @@ void MAX11300::prepare_ramps(RampAction *ramp_action, Ramp *ramps) {
 
 void MAX11300::run_ramps(RampAction *ramp_action) {
   // TODO(bsm): maybe add a check here that it's a valid write address?
-  SCB_CleanDCache_by_Addr(reinterpret_cast<uint32_t *>(ramp_action),
-                          sizeof(RampAction));
   uint8_t *write_buffer = ramp_action->ramp_id;
   uint8_t *end_write_addr = reinterpret_cast<uint8_t *>(
       write_buffer + 3 * ramp_action->num_ramps * ramp_action->num_steps);
@@ -258,19 +256,29 @@ void MAX11300::run_ramps(RampAction *ramp_action) {
   MBED_ASSERT(wait_time_us >= 0);
   for (; write_buffer < end_write_addr; write_buffer += 3) {
     m_cs = 0;
-    m_xfer_done = 0;
+    m_write_done = 0;
     m_spi_bus.transfer(static_cast<const uint8_t *>(write_buffer), 3,
                        static_cast<uint8_t *>(NULL), 0,
-                       Callback<void(int)>(this, &MAX11300::spi_cb));
-    while (!m_xfer_done)
+                       Callback<void(int)>(this, &MAX11300::spi_write_cb));
+    while (!m_write_done)
       ;
     bsm_delay_us(static_cast<uint32_t>(wait_time_us));
   }
 }
 
+void MAX11300::max_speed_adc_read(MAX11300_Ports port, uint16_t* values, size_t num_samples) {
+  // m_spi_bus.frequency(20000000);
+
+  for(size_t i = 0; i < num_samples; i++) {
+    values[i] = read_register(
+        static_cast<MAX11300RegAddress_t>(adc_data_port_00 + port));
+  }
+  // m_spi_bus.frequency(WRITE_SPI_RATE_HZ);
+}
+
 //*********************************************************************
 void MAX11300::init(void) {
-  m_spi_bus.frequency(MAX_SPI_RATE_HZ);
+  m_spi_bus.frequency(WRITE_SPI_RATE_HZ);
 
   // see datasheet 19-7318; Rev 3; 4/16; page 49
   // https://datasheets.maximintegrated.com/en/ds/MAX11300.pdf

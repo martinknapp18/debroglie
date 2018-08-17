@@ -49,6 +49,13 @@ public:
                                     double end_freq_hz, size_t steps_up,
                                     size_t steps_down, double step_time_up_s,
                                     double step_time_down_s);
+  inline void set_freq_linear_sweep_params(Channel ch, double start_freq_hz,
+                                    double end_freq_hz, size_t steps,
+                                    double step_time_s) {
+    set_freq_linear_sweep_params(ch, start_freq_hz, end_freq_hz, steps, steps,
+                                 step_time_s, step_time_s);
+  }
+
   void start_linear_sweep_up(Channel ch);
   void start_linear_sweep_down(Channel ch);
 

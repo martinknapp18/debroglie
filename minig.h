@@ -17,9 +17,9 @@ private:
   void mot();
   void pgc();
   void mw(int pulse);
-  void interferometry(uint32_t T, uint32_t fall);
+  void interferometry(uint32_t T, uint32_t fall, uint32_t raman);
   void image();
-  void set_dds_params(double delta);
+  void set_dds_params(double chirp_rate_kHz_p_ms, double raman_detuning_kHz);
 
   const uint32_t coils_;
   const uint32_t liquid_crystal_1_;
@@ -33,7 +33,9 @@ private:
   const uint32_t analog_trigger_;
 
   // Just in case of external DDS
+  const uint32_t mw_dds_profile_pin_;
   const uint32_t dds_switch_;
+  const uint32_t inter_dds_profile_pin_;
 
   // Debugging Utils
   const uint32_t scope_;

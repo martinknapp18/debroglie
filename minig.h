@@ -12,14 +12,26 @@ public:
   void init();
   void run();
 
+  struct dds_params_t {
+    uint8_t mult;
+    uint32_t clk_transition_hex;
+    uint32_t chirp_start_hex;
+    uint32_t chirp_stop_hex;
+    uint32_t mw_time_hex;
+    uint32_t mw_freq_hex;
+    uint32_t chirp_time_hex;
+    uint32_t chirp_freq_hex;
+    double actual_chirp;
+  };
+
 private:
-  void reset(float we);
+  void reset();
   void mot();
   void pgc();
   void mw(int pulse);
   void interferometry(uint32_t T, uint32_t fall, uint32_t raman);
   void image();
-  void set_dds_params(double chirp_rate_kHz_p_ms, double raman_detuning_kHz);
+  void set_dds_params(dds_params_t params);
 
   const uint32_t coils_;
   const uint32_t liquid_crystal_1_;

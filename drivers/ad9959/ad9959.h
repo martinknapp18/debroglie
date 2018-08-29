@@ -45,24 +45,26 @@ public:
   void io_update();
   void set_freq(Channel ch, double freq_hz);
   void set_phase(Channel ch, double phase_deg);
-  void set_freq_linear_sweep_params(Channel ch, double start_freq_hz,
-                                    double end_freq_hz, size_t steps_up,
-                                    size_t steps_down, double step_time_up_s,
-                                    double step_time_down_s);
-  inline void set_freq_linear_sweep_params(Channel ch, double start_freq_hz,
-                                    double end_freq_hz, size_t steps,
-                                    double step_time_s) {
-    set_freq_linear_sweep_params(ch, start_freq_hz, end_freq_hz, steps, steps,
-                                 step_time_s, step_time_s);
+  void
+  set_freq_linear_sweep_params(AD9959::Channel ch, uint8_t mult,
+                               uint32_t start_freq_word, uint32_t end_freq_word,
+                               uint32_t step_word_up, uint32_t step_word_down,
+                               uint8_t time_word_up, uint8_t time_word_down);
+  inline void set_freq_linear_sweep_params(AD9959::Channel ch, uint8_t mult,
+                                           uint32_t start_freq_word,
+                                           uint32_t end_freq_word,
+                                           uint32_t step_word,
+                                           uint8_t time_word) {
+    set_freq_linear_sweep_params(ch, mult, start_freq_word, end_freq_word,
+                                 step_word, step_word, time_word, time_word);
   }
 
   void start_linear_sweep_up(Channel ch);
   void start_linear_sweep_down(Channel ch);
 
 private:
-  uint32_t sys_clk_;
+  uint32_t ref_freq_;
   uint8_t mult_;
-  uint32_t sync_clk_;
 
   SPI &spi_bus_;
   DigitalOut cs_;
@@ -173,13 +175,15 @@ private:
 
   void write_register(Register reg, uint32_t value);
   void set_csr(Channel ch);
-  void set_fr1(ModLevel modlevel);
+  void set_fr1(ModLevel modlevel, uint8_t mult);
 
+  uint64_t sys_clk() { return ref_freq_ * mult_; }
+  uint64_t sync_clk() { return sys_clk() / 4; }
   double freq_res() {
-    return static_cast<double>(sys_clk_ / static_cast<double>(1LL << 32));
+    return static_cast<double>(sys_clk() / static_cast<double>(1LL << 32));
   }
 
-  constexpr double phase_res() {
+  double phase_res() {
     return static_cast<double>(360 / static_cast<double>(1LL << 14));
   }
 
@@ -187,12 +191,12 @@ private:
     return static_cast<uint32_t>((freq_hz / freq_res()) + 0.5);
   }
 
-  constexpr uint16_t phaseToHex(double phase_deg) {
+  uint16_t phaseToHex(double phase_deg) {
     return static_cast<uint16_t>(phase_deg / phase_res() + 0.5) % 16384;
   }
 
   uint8_t timeToHex(double time_s) {
-    return static_cast<uint8_t>((time_s * sync_clk_));
+    return static_cast<uint8_t>((time_s * sync_clk()));
   }
 
   // NOTE: the order of the registers defined below is in reverse order from

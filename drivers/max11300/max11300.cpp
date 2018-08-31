@@ -59,7 +59,7 @@ uint8_t reg_data_buf[3];
 // Current usage in the minig experiment:
 // 3*30 + 4 * 60 + 6 * 50 + 6 * 130 + 3*80
 constexpr size_t RAMP_BUFFER_SIZE =
-    3 * (3 * 30 + 4 * 60 + 6 * 50 + 6 * 130 + 3 * 80);
+    3 * (3 * 30 + 4 * 60 + 6 * 50 + 6 * 130 + 3 * 80 + 128);
 uint8_t ramp_buffer[RAMP_BUFFER_SIZE];
 
 } // namespace
@@ -249,7 +249,7 @@ void MAX11300::run_ramps(RampAction *ramp_action) {
   uint8_t *write_buffer = ramp_action->ramp_id;
   uint8_t *end_write_addr = reinterpret_cast<uint8_t *>(
       write_buffer + 3 * ramp_action->num_ramps * ramp_action->num_steps);
-  MBED_ASSERT(ramp_action->step_time_us >= 100);
+  MBED_ASSERT(ramp_action->step_time_us >= 40);
   // @ 27MHz, it takes about 2us to send these 3 bytes.
   int32_t wait_time_us =
       ramp_action->step_time_us / ramp_action->num_ramps - 10;

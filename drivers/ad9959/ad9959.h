@@ -45,11 +45,24 @@ public:
   void io_update();
   void set_freq(Channel ch, double freq_hz);
   void set_phase(Channel ch, double phase_deg);
+
+  void set_freq_linear_sweep_params(Channel ch, double start_freq_hz,
+                                    double end_freq_hz, size_t steps_up,
+                                    size_t steps_down, double step_time_up_s,
+                                    double step_time_down_s);
+  inline void set_freq_linear_sweep_params(Channel ch, double start_freq_hz,
+                                           double end_freq_hz, size_t steps,
+                                           double step_time_s) {
+    set_freq_linear_sweep_params(ch, start_freq_hz, end_freq_hz, steps, steps,
+                                 step_time_s, step_time_s);
+  }
+
   void
   set_freq_linear_sweep_params(AD9959::Channel ch, uint8_t mult,
                                uint32_t start_freq_word, uint32_t end_freq_word,
                                uint32_t step_word_up, uint32_t step_word_down,
                                uint8_t time_word_up, uint8_t time_word_down);
+
   inline void set_freq_linear_sweep_params(AD9959::Channel ch, uint8_t mult,
                                            uint32_t start_freq_word,
                                            uint32_t end_freq_word,
@@ -273,7 +286,7 @@ private:
       uint8_t dac_power_down : 1;          // 0: enabled (default), 1: disabled
       uint8_t digital_core_power_down : 1; // 0: enabled (default), 1: disabled.
       uint8_t dac_full_scale_current_control : 2; // 0b11: the DAC is at the
-                                                  // largest LSB value (default)
+      // largest LSB value (default)
       // See Table 5 for other settings.
       uint8_t must_be_zero : 1;          // Keep at at 0
       uint8_t : 2;                       // Open, do not use.

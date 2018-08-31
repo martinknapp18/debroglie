@@ -23,6 +23,7 @@ inline void delayCycles(uint32_t const numCycles) {
 }
 
 inline uint32_t usToCycles(uint32_t const us) {
+  // return ceil(us * ((float)SystemCoreClock / 1e6f)) - 56;
   return ceil(us * ((float)SystemCoreClock / 1e6f)) - 16;
 }
 

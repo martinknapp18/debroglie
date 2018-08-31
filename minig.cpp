@@ -29,141 +29,7 @@ constexpr int16_t to_dac(double volts) {
 constexpr size_t num_samples = 1200;
 uint16_t samples[num_samples];
 
-constexpr MiniG::dds_params_t dds_params_0 = {.mult = 16,
-                                              .clk_transition_hex = 0x1435f916,
-                                              .chirp_start_hex = 0x155ce28e,
-                                              .chirp_stop_hex = 0x1eeda2a3,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x30,
-                                              .chirp_time_hex = 0x7b,
-                                              .chirp_freq_hex = 0x76a,
-                                              .actual_chirp = 22.993824};
-
-constexpr MiniG::dds_params_t dds_params_1 = {.mult = 16,
-                                              .clk_transition_hex = 0x1435f916,
-                                              .chirp_start_hex = 0x155ce28e,
-                                              .chirp_stop_hex = 0x1eeda2a3,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x30,
-                                              .chirp_time_hex = 0xf6,
-                                              .chirp_freq_hex = 0xed4,
-                                              .actual_chirp = 22.993824};
-
-constexpr MiniG::dds_params_t dds_params_2 = {.mult = 20,
-                                              .clk_transition_hex = 0x102b2dab,
-                                              .chirp_start_hex = 0x11171ba5,
-                                              .chirp_stop_hex = 0x18be1bea,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x1e,
-                                              .chirp_time_hex = 0xa1,
-                                              .chirp_freq_hex = 0x636,
-                                              .actual_chirp = 22.993834};
-
-constexpr MiniG::dds_params_t dds_params_3 = {.mult = 17,
-                                              .clk_transition_hex = 0x13059f23,
-                                              .chirp_start_hex = 0x141b2f95,
-                                              .chirp_stop_hex = 0x1d1be5a7,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x2a,
-                                              .chirp_time_hex = 0x94,
-                                              .chirp_freq_hex = 0x7e7,
-                                              .actual_chirp = 22.993875};
-
-constexpr MiniG::dds_params_t dds_params_4 = {.mult = 19,
-                                              .clk_transition_hex = 0x110507a6,
-                                              .chirp_start_hex = 0x11fd6078,
-                                              .chirp_stop_hex = 0x1a0b7ca8,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x22,
-                                              .chirp_time_hex = 0xc0,
-                                              .chirp_freq_hex = 0x835,
-                                              .actual_chirp = 22.993875};
-
-constexpr MiniG::dds_params_t dds_params_5 = {.mult = 16,
-                                              .clk_transition_hex = 0x1435f916,
-                                              .chirp_start_hex = 0x155ce28e,
-                                              .chirp_stop_hex = 0x1eeda476,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x30,
-                                              .chirp_time_hex = 0xb5,
-                                              .chirp_freq_hex = 0xae9,
-                                              .actual_chirp = 22.993891};
-
-constexpr MiniG::dds_params_t dds_params_6 = {.mult = 19,
-                                              .clk_transition_hex = 0x110507a6,
-                                              .chirp_start_hex = 0x11fd6078,
-                                              .chirp_stop_hex = 0x1a0b7dc3,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x22,
-                                              .chirp_time_hex = 0xe3,
-                                              .chirp_freq_hex = 0x9b4,
-                                              .actual_chirp = 22.993924};
-
-constexpr MiniG::dds_params_t dds_params_7 = {.mult = 16,
-                                              .clk_transition_hex = 0x1435f916,
-                                              .chirp_start_hex = 0x155ce28e,
-                                              .chirp_stop_hex = 0x1eeda567,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x30,
-                                              .chirp_time_hex = 0xef,
-                                              .chirp_freq_hex = 0xe68,
-                                              .actual_chirp = 22.993926};
-
-constexpr MiniG::dds_params_t dds_params_8 = {.mult = 20,
-                                              .clk_transition_hex = 0x102b2dab,
-                                              .chirp_start_hex = 0x11171ba5,
-                                              .chirp_stop_hex = 0x18be1dfa,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x1e,
-                                              .chirp_time_hex = 0x99,
-                                              .chirp_freq_hex = 0x5e7,
-                                              .actual_chirp = 22.993928};
-
-constexpr MiniG::dds_params_t dds_params_9 = {.mult = 17,
-                                              .clk_transition_hex = 0x13059f23,
-                                              .chirp_start_hex = 0x141b2f95,
-                                              .chirp_stop_hex = 0x1d1be7aa,
-                                              .mw_time_hex = 0x1,
-                                              .mw_freq_hex = 0x2a,
-                                              .chirp_time_hex = 0x91,
-                                              .chirp_freq_hex = 0x7be,
-                                              .actual_chirp = 22.993953};
-
-constexpr MiniG::dds_params_t fringe_params[10] = {
-    dds_params_0, dds_params_1, dds_params_2, dds_params_3, dds_params_4,
-    dds_params_5, dds_params_6, dds_params_7, dds_params_8, dds_params_9,
-};
-
-constexpr float NS_MOT = 0.07;
-constexpr float WE_MOT = 0.28;
-constexpr float BIAS_MOT = 0.77;
-constexpr float AO1_MOT = 6.75;
-constexpr float AO2_MOT = 1.75;
-constexpr float AO3_MOT = 5;
-constexpr float EO_MOT = 8.97;
-
-constexpr float AO1_PGC = 6.6;
-constexpr float AO2_PGC = 2.4;
-constexpr float AO3_PGC = 1.88;
-constexpr float EO_PGC = 9.85;
-
-constexpr float WE_MW = 2.28;
-constexpr float NS_MW = 1.07;
-constexpr float AO1_BLOW_AWAY = 7.5;
-constexpr float AO2_BLOW_AWAY = 0;
-constexpr float AO3_BLOW_AWAY = 10;
-constexpr float EO_PUMP = 9.21;
-
-constexpr float WE_RAMAN = 0.25;
-constexpr float NS_RAMAN = 0.04;
-constexpr float BIAS_INTER = 10;
-constexpr float AO1_RAMAN = 8.0;
-constexpr float AO2_RAMAN = 3.1;
-constexpr float EO_RAMAN = 6.5;
-
-constexpr float AO1_IMAGE = 7.1;
-constexpr float AO2_IMAGE = 1.75;
-constexpr float EO_IMAGE = 8.93;
+#include "declare_fringes.h"
 
 } // namepsace
 
@@ -209,6 +75,27 @@ MiniG::MiniG() :
       pixi_{pixi_spi_, SPI_CS} {}
 // clang-format on
 
+void MiniG::set_dds_params(double chirp_rate_kHz_p_ms,
+                           double raman_detuning_kHz) {
+
+  constexpr double free_fall_time_s = .260;
+  constexpr double num_steps = 500000;
+  // constexpr double num_steps = 130;
+  constexpr double num_steps_mw = 50000000;
+  constexpr double clock_transition = 12631770;
+  double chirp_start_hz = raman_detuning_kHz * 1000 + clock_transition;
+  double chirp_stop_hz =
+      chirp_start_hz + free_fall_time_s * 1000 * chirp_rate_kHz_p_ms * 1000;
+  dds_.reset();
+  dds_.set_freq_linear_sweep_params(AD9959::Channel0, chirp_start_hz,
+                                    chirp_stop_hz, free_fall_time_s * num_steps,
+                                    1 / num_steps);
+  dds_.set_freq_linear_sweep_params(AD9959::Channel1, clock_transition,
+                                    chirp_start_hz, .01 * num_steps_mw,
+                                    1 / num_steps_mw);
+  dds_.io_update();
+}
+
 void MiniG::set_dds_params(dds_params_t params) {
   dds_.reset();
   dds_.set_freq_linear_sweep_params(
@@ -235,6 +122,9 @@ void MiniG::init() {
   pin_function(port_pin(PortG, 3),
                STM_PIN_DATA(STM_MODE_OUTPUT_PP, GPIO_NOPULL, 0));
 
+  constexpr float NS_MOT = 0.04;
+  constexpr float WE_MOT = 0.25;
+  constexpr float BIAS_MOT = 0.77;
   // Ramps for Analog IO
   // clang-format off
   MAX11300::Ramp mot_on_ramps[] = {
@@ -249,10 +139,10 @@ void MiniG::init() {
   pixi_.prepare_ramps(&mot_on_ramp_, mot_on_ramps);
 
   MAX11300::Ramp pgc_on_ramps[] = {
-      {ao1_freq_, to_dac(AO1_MOT), to_dac(AO1_PGC)},
-      {ao2_atten_, to_dac(AO2_MOT), to_dac(AO2_PGC)},
-      {ao3_atten_, to_dac(AO3_MOT), to_dac(AO3_PGC)},
-      {eo_freq_, to_dac(EO_MOT), to_dac(EO_PGC)},
+      {ao1_freq_, to_dac(6.75), to_dac(6.6)},
+      {ao2_atten_, to_dac(1.75), to_dac(2.4)},
+      {ao3_atten_, to_dac(5), to_dac(1.88)},
+      {eo_freq_, to_dac(8.97), to_dac(9.85)},
   };
   pgc_on_ramp_.configured = 0;
   pgc_on_ramp_.num_ramps = ARRAYSIZE(pgc_on_ramps);
@@ -260,13 +150,13 @@ void MiniG::init() {
   pgc_on_ramp_.step_time_us = 100;
   pixi_.prepare_ramps(&pgc_on_ramp_, pgc_on_ramps);
 
+  constexpr float WE_MW = 2.25;
   MAX11300::Ramp mw_on_ramps[] = {
-      {ao1_freq_, to_dac(AO1_PGC), to_dac(AO1_BLOW_AWAY)},
-      {ao2_atten_, to_dac(AO2_PGC), to_dac(AO2_BLOW_AWAY)},
-      {ao3_atten_, to_dac(AO3_PGC), to_dac(AO3_BLOW_AWAY)},
-      {ns_field_, to_dac(NS_MOT), to_dac(NS_MW)},
+      {ao1_freq_, to_dac(6.6), to_dac(7.5)},
+      {ao2_atten_, to_dac(2.4), to_dac(0)},
+      {ao3_atten_, to_dac(1.88), to_dac(10)},
       {we_field_, to_dac(WE_MOT), to_dac(WE_MW)},
-      {eo_freq_, to_dac(EO_PGC), to_dac(EO_PUMP)},
+      {eo_freq_, to_dac(9.85), to_dac(9.21)},
   };
   mw_on_ramp_.configured = 0;
   mw_on_ramp_.num_ramps = ARRAYSIZE(mw_on_ramps);
@@ -274,28 +164,30 @@ void MiniG::init() {
   mw_on_ramp_.step_time_us = 100;
   pixi_.prepare_ramps(&mw_on_ramp_, mw_on_ramps);
 
+  constexpr float WE_RAMAN = 0.25;
+  constexpr float BIAS_INTER = 10;
   MAX11300::Ramp raman_on_ramps[] = {
-      //2ms
-      {ao1_freq_, to_dac(AO1_BLOW_AWAY), to_dac(AO1_RAMAN)},
-      {ao2_atten_, to_dac(AO2_BLOW_AWAY), to_dac(AO2_RAMAN)},
+    //2ms
+      {ao1_freq_, to_dac(7.5), to_dac(8.0)},
+      {ao2_atten_, to_dac(0), to_dac(2.9)},
       // Should be 5ms
-      {ns_field_, to_dac(NS_MOT), to_dac(NS_RAMAN)},
+      {ns_field_, to_dac(NS_MOT), to_dac(0)},
       {we_field_, to_dac(WE_MW), to_dac(WE_RAMAN)},
       // 2 ms
-      {eo_freq_, to_dac(EO_PUMP), to_dac(EO_RAMAN)},
+      {eo_freq_, to_dac(9.21), to_dac(6.5)},
       // should be 5 ms again
       {bias_field_, to_dac(BIAS_MOT), to_dac(BIAS_INTER)},
   };
   raman_on_ramp_.configured = 0;
   raman_on_ramp_.num_ramps = ARRAYSIZE(raman_on_ramps);
-  raman_on_ramp_.num_steps = 50;
+  raman_on_ramp_.num_steps = 20;
   raman_on_ramp_.step_time_us = 100;
   pixi_.prepare_ramps(&raman_on_ramp_, raman_on_ramps);
 
   MAX11300::Ramp image_on_ramps[] = {
-      {ao1_freq_, to_dac(AO1_RAMAN), to_dac(AO1_IMAGE)},
-      {ao2_atten_, to_dac(AO2_RAMAN), to_dac(AO2_IMAGE)},
-      {eo_freq_, to_dac(EO_RAMAN), to_dac(EO_IMAGE)},
+      {ao1_freq_, to_dac(8), to_dac(7.1)},
+      {ao2_atten_, to_dac(2.9), to_dac(1.75)},
+      {eo_freq_, to_dac(6.5), to_dac(8.93)},
   };
   image_on_ramp_.configured = 0;
   image_on_ramp_.num_ramps = ARRAYSIZE(image_on_ramps);
@@ -308,7 +200,7 @@ void MiniG::init() {
   // no reason.
   dds_.init();
   pixi_.init();
-  set_dds_params(dds_params_0);
+  set_dds_params(22.9, 790);
   reset();
 }
 
@@ -320,7 +212,11 @@ void MiniG::reset() {
                mw_dds_profile_pin_ | inter_dds_profile_pin_);
   WRITE_IO(GPIOG, BITS_NONE, under_vac_shutter_ | scope_);
 
-  pixi_.single_ended_dac_write(ao1_freq_, to_dac(AO1_MOT));
+  constexpr float MOT_FREQ = 6.75;
+  constexpr float AO2_MOT = 1.75;
+  constexpr float AO3_MOT = 5;
+  constexpr float EO_MOT = 8.97;
+  pixi_.single_ended_dac_write(ao1_freq_, to_dac(MOT_FREQ));
   pixi_.single_ended_dac_write(ao2_atten_, to_dac(AO2_MOT));
   pixi_.single_ended_dac_write(ao3_atten_, to_dac(AO3_MOT));
   pixi_.single_ended_dac_write(z_field_, to_dac(0));
@@ -340,37 +236,38 @@ void MiniG::reset() {
 void MiniG::run() {
   printf("start sweep\n");
 #if MW_RABI
-  for (int pulse = 0; pulse <= 300; pulse += 10) {
+  for (int pulse = 0; pulse <= 800; pulse += 10) {
 #endif
 #if RAMAN_RABI
     for (uint32_t raman = 0; raman <= 30; raman += 2) {
 #endif
 // for (double delta = -120; delta <= -20; delta += 20) {
+// for(float fall_ms = 192; fall_ms <= 300; fall_ms += 5) {
 // for (float bias = 0; bias <= 5.0; bias += .2) {
 #if SPECTROSCOPY
-      for (double raman_detuning = 00; raman_detuning <= 2000;
+      for (double raman_detuning = 400; raman_detuning <= 1000;
            raman_detuning += 10) {
-// set_dds_params(23.0, raman_detuning);
+        set_dds_params(22.9, raman_detuning);
 #endif
-// for(float fall_ms = 4; fall_ms <= 80; fall_ms += 2) {
 #if INTER
-        for (size_t j = 0; j < 10; j++) {
-          j = 2;
-          set_dds_params(fringe_params[j]);
+        // for (double chirp = 22.5; chirp <= 23.511; chirp += 0.02) {
+        // set_dds_params(chirp, 790);
+        for (size_t j = 0; j < NUM_POINTS; j++) {
+          set_dds_params(fringes[j]);
 #endif
 #if RAMAN_RABI
-// set_dds_params(23.0, 790);
+          set_dds_params(23.0, 790);
 #endif
           reset();
           mot();
           pgc();
 
 #if !MW_RABI
-          int pulse = 220;
+          int pulse = 230;
 #endif
           mw(pulse);
           uint32_t T = 100;
-          float fall_ms = 46.4;
+          float fall_ms = 45.2;
           uint32_t fall_us = static_cast<uint32_t>(fall_ms * 1000);
 #if !RAMAN_RABI
           uint32_t raman = 8;
@@ -378,17 +275,18 @@ void MiniG::run() {
           interferometry(T, fall_us, raman);
 
           image();
-          wait(1);
+          wait_ms(500);
 
 // double delta = -790;
-// printf("fall: %f\n", fall_ms);
+// printf("fall_ms: %f\n", fall_ms);
 // printf("delta: %f\n", delta);
 // printf("bias: %f\n", bias);
 #if SPECTROSCOPY
           printf("rd: %f\n", raman_detuning);
 #endif
 #if INTER
-          printf("rd: %f\n", fringe_params[j].actual_chirp);
+          // printf("rd: %f\n", chirp);
+          printf("rd: %f\n", fringes[j].actual_chirp);
 #endif
 #if MW_RABI
           printf("rd: %d\n", pulse);
@@ -433,7 +331,9 @@ void MiniG::run() {
 #if RAMAN_RABI | SPECTROSCOPY | INTER
           printf("fr: %f\n\n", detection);
 #endif
+#if RAMAN_RABI | SPECTROSCOPY | INTER | MW_RABI
         }
+#endif
         printf("end sweep\n");
       }
 
@@ -444,7 +344,7 @@ void MiniG::run() {
 
         // Actual MOT Stage
         WRITE_IO(GPIOE, coils_, BITS_NONE);
-        bsm_delay_ms(200);
+        bsm_delay_ms(500);
 
         // Turn the MOT off
         WRITE_IO(GPIOE, BITS_NONE, coils_);
@@ -455,6 +355,7 @@ void MiniG::run() {
       void MiniG::pgc() {
         WRITE_IO(GPIOE, laser_jump_, BITS_NONE);
         pixi_.run_ramps(&pgc_on_ramp_);
+        bsm_delay_us(500);
 
         // Just hold it to cool
         bsm_delay_ms(10);
@@ -470,6 +371,7 @@ void MiniG::run() {
                  laser_jump_ | liquid_crystal_1_ | ao_2_ | ao_3_);
 
         pixi_.run_ramps(&mw_on_ramp_);
+        bsm_delay_ms(2);
 
         // Actually turn on Microwave
         WRITE_IO(GPIOE, BITS_NONE, m_horn_switch_);
@@ -480,11 +382,11 @@ void MiniG::run() {
         bsm_delay_ms(1);
 
         // Blow away
-        WRITE_IO(GPIOE, /* ao_3_ | */ mot_eo_ | mw_dds_profile_pin_, BITS_NONE);
+        WRITE_IO(GPIOE, ao_3_ | mot_eo_ | mw_dds_profile_pin_, BITS_NONE);
 #if MW_RABI
         bsm_delay_us(10000);
 #else
-  bsm_delay_us(10000 - pulse_duration);
+    bsm_delay_us(10000 - pulse_duration);
 #endif
       }
 
@@ -493,38 +395,40 @@ void MiniG::run() {
         WRITE_IO(GPIOE, BITS_NONE,
                  ao_3_ | cooling_shutter_ | raman_eo_ | dds_switch_);
         pixi_.run_ramps(&raman_on_ramp_);
-        // last 5 ms
-        bsm_delay_ms(5);
+        // last 2 ms
+        bsm_delay_ms(11);
 
         // Freefall
         WRITE_IO(GPIOE, ao_3_ | inter_dds_profile_pin_, BITS_NONE);
         bsm_delay_ms(5);
 
+        WRITE_IO(GPIOG, scope_, BITS_NONE);
 #if INTER | SPECTROSCOPY
-        // WRITE_IO(GPIOE, ao_2_ | analog_trigger_, BITS_NONE);
+        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
         bsm_delay_us(4);
 #endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_ | analog_trigger_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
 
         bsm_delay_ms(T);
 
 #if INTER
-        // WRITE_IO(GPIOE, ao_2_ | analog_trigger_, BITS_NONE);
+        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
         bsm_delay_us(8);
 #endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_ | analog_trigger_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
 
         bsm_delay_ms(T);
 
 #if INTER
-        // WRITE_IO(GPIOE, ao_2_ | analog_trigger_, BITS_NONE);
+        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
         bsm_delay_us(4);
 #elif RAMAN_RABI
-  WRITE_IO(GPIOE, ao_2_, BITS_NONE);
-  bsm_delay_us(raman);
+    WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+    bsm_delay_us(raman);
 #endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_ | analog_trigger_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
 
+        WRITE_IO(GPIOG, BITS_NONE, scope_);
         bsm_delay_us(fall);
 
         // Stop sweeping
@@ -533,19 +437,21 @@ void MiniG::run() {
       void MiniG::image() {
         WRITE_IO(GPIOE, cooling_shutter_ | dds_switch_ | raman_eo_, ao_3_);
         pixi_.run_ramps(&image_on_ramp_);
-        // takes 3 ms
-        bsm_delay_ms(5);
+        // takes 2 ms
+        bsm_delay_ms(3);
 
         // Stabilize
         WRITE_IO(GPIOE, BITS_NONE, mot_eo_);
-        bsm_delay_us(3600);
+        bsm_delay_us(2700);
 
         WRITE_IO(GPIOE, m_lock_, BITS_NONE);
         bsm_delay_us(50);
 
         // Turn laser on
         WRITE_IO(GPIOE, ao_3_ | camera_ttl_, BITS_NONE);
+        // TODO(bsm): write code for this in a minute
         pixi_.max_speed_adc_read(photodiode_, samples, 127);
+        // bsm_delay_us(400);
 
         // Repumping Stage
         WRITE_IO(GPIOE, ao_2_ /*BITS_NONE*/, camera_ttl_);
@@ -554,6 +460,7 @@ void MiniG::run() {
         // Second Sample
         WRITE_IO(GPIOE, BITS_NONE, ao_2_);
         pixi_.max_speed_adc_read(photodiode_, &samples[127], 127);
+        // bsm_delay_us(400);
 
         // Wait before background
         bsm_delay_ms(5);

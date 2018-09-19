@@ -27,6 +27,12 @@ inline uint32_t usToCycles(uint32_t const us) {
   return ceil(us * ((float)SystemCoreClock / 1e6f)) - 16;
 }
 
+inline uint32_t nsToCycles(uint32_t const ns) {
+  // return ceil(us * ((float)SystemCoreClock / 1e6f)) - 56;
+  return ceil(ns * ((float)SystemCoreClock / 1e9f)) - 16;
+}
+
+inline void bsm_delay_ns(uint32_t const ns) { delayCycles(nsToCycles(ns)); }
 inline void bsm_delay_us(uint32_t const us) { delayCycles(usToCycles(us)); }
 inline void bsm_delay_ms(uint32_t const ms) { delayCycles(usToCycles(ms * 1000)); }
 

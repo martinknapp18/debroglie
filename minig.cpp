@@ -266,7 +266,7 @@ void MiniG::reset(float ao2_pgc, float ao3_pgc) {
 void MiniG::run() {
 
 #if MW_RABI
-    for (int pulse = 0; pulse <= 800; pulse += 10) {
+    for (int pulse = 150; pulse <= 250; pulse += 5) {
 #endif
 #if RAMAN_RABI
       for (uint32_t raman = 0; raman <= 30; raman += 1) {
@@ -290,7 +290,7 @@ void MiniG::run() {
             pgc();
 
 #if !MW_RABI
-            int pulse = 220;
+            int pulse = 190;
 #endif
             mw(pulse);
             uint32_t T = 115;
@@ -367,7 +367,7 @@ void MiniG::run() {
 
         // Actual MOT Stage
         WRITE_IO(GPIOE, coils_ | analog_trigger_, BITS_NONE);
-        bsm_delay_ms(300);
+        bsm_delay_ms(325);
 
         // Turn the MOT off
         WRITE_IO(GPIOE, BITS_NONE, coils_ | analog_trigger_);

@@ -1,40 +1,76 @@
-// constexpr MiniG::dds_params_t inter_dds_params_0 = {
-//     .mult = 15,
-//     .clk_transition_hex = 0x158ee78e,
-//     .chirp_start_hex = 0x16c0bd3b,
-//     .chirp_stop_hex = 0x20f4bca1,
-//     .mw_time_hex = 0xf6,
-//     .mw_freq_hex = 0x335c,
-//     .chirp_time_hex = 0xf6,
-//     .chirp_freq_hex = 0x10df,
-//     .actual_chirp = 22.993801,
-//     .detuning = 700.000000};
- 
-constexpr MiniG::dds_params_t inter_dds_params_1 = {
-    .mult = 19,
-    .clk_transition_hex = 0x110507a6,
-    .chirp_start_hex = 0x11f67a72,
-    .chirp_stop_hex = 0x1a049508,
-    .mw_time_hex = 0x9d,
-    .mw_freq_hex = 0x146e,
-    .chirp_time_hex = 0x9d,
-    .chirp_freq_hex = 0x6b6,
-    .actual_chirp = 22.993806,
+constexpr MiniG::dds_params_t inter_dds_params_0 = {
+    .mult = 13,
+    .clk_transition_hex = 0x18dff77d,
+    .chirp_start_hex = 0x1a40da58,
+    .chirp_stop_hex = 0x2606aefb,
+    .mw_time_hex = 0xf3,
+    .mw_freq_hex = 0x438b,
+    .chirp_time_hex = 0xf3,
+    .chirp_freq_hex = 0x1630,
+    .actual_chirp = 22.993703,
     .detuning = 700.000000};
 
-// constexpr MiniG::dds_params_t inter_dds_params_2 = {
-//     .mult = 10,
-//     .clk_transition_hex = 0x20565b56,
-//     .chirp_start_hex = 0x22211bd9,
-//     .chirp_stop_hex = 0x316f1b6c,
-//     .mw_time_hex = 0xa3,
-//     .mw_freq_hex = 0x4c92,
-//     .chirp_time_hex = 0xa3,
-//     .chirp_freq_hex = 0x1927,
-//     .actual_chirp = 22.993812,
-//     .detuning = 700.000000};
+constexpr MiniG::dds_params_t inter_dds_params_1 = {
+    .mult = 13,
+    .clk_transition_hex = 0x18dff77d,
+    .chirp_start_hex = 0x1a40da58,
+    .chirp_stop_hex = 0x2606af86,
+    .mw_time_hex = 0xfb,
+    .mw_freq_hex = 0x45c4,
+    .chirp_time_hex = 0xfb,
+    .chirp_freq_hex = 0x16eb,
+    .actual_chirp = 22.993719,
+    .detuning = 700.000000};
+
+constexpr MiniG::dds_params_t inter_dds_params_2 = {
+    .mult = 15,
+    .clk_transition_hex = 0x158ee78e,
+    .chirp_start_hex = 0x16c0bd3b,
+    .chirp_stop_hex = 0x20f4bacf,
+    .mw_time_hex = 0xff,
+    .mw_freq_hex = 0x353d,
+    .chirp_time_hex = 0xff,
+    .chirp_freq_hex = 0x117d,
+    .actual_chirp = 22.993738,
+    .detuning = 700.000000};
 
 constexpr MiniG::dds_params_t inter_dds_params_3 = {
+    .mult = 16,
+    .clk_transition_hex = 0x1435f916,
+    .chirp_start_hex = 0x1554b167,
+    .chirp_stop_hex = 0x1ee56fba,
+    .mw_time_hex = 0xbc,
+    .mw_freq_hex = 0x227f,
+    .chirp_time_hex = 0xbc,
+    .chirp_freq_hex = 0xb55,
+    .actual_chirp = 22.993760,
+    .detuning = 700.000000};
+
+constexpr MiniG::dds_params_t inter_dds_params_4 = {
+    .mult = 12,
+    .clk_transition_hex = 0x1af2a172,
+    .chirp_start_hex = 0x1c70ec8a,
+    .chirp_stop_hex = 0x2931eb30,
+    .mw_time_hex = 0xf5,
+    .mw_freq_hex = 0x4fec,
+    .chirp_time_hex = 0xf5,
+    .chirp_freq_hex = 0x1a41,
+    .actual_chirp = 22.993784,
+    .detuning = 700.000000};
+
+constexpr MiniG::dds_params_t inter_dds_params_5 = {
+    .mult = 17,
+    .clk_transition_hex = 0x13059f23,
+    .chirp_start_hex = 0x141379cb,
+    .chirp_stop_hex = 0x1d142dee,
+    .mw_time_hex = 0x97,
+    .mw_freq_hex = 0x188b,
+    .chirp_time_hex = 0x97,
+    .chirp_freq_hex = 0x810,
+    .actual_chirp = 22.993799,
+    .detuning = 700.000000};
+
+constexpr MiniG::dds_params_t inter_dds_params_6 = {
     .mult = 18,
     .clk_transition_hex = 0x11f7164c,
     .chirp_start_hex = 0x12f5f307,
@@ -46,31 +82,7 @@ constexpr MiniG::dds_params_t inter_dds_params_3 = {
     .actual_chirp = 22.993817,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_4 = {
-    .mult = 16,
-    .clk_transition_hex = 0x1435f916,
-    .chirp_start_hex = 0x1554b167,
-    .chirp_stop_hex = 0x1ee5717c,
-    .mw_time_hex = 0x7b,
-    .mw_freq_hex = 0x1692,
-    .chirp_time_hex = 0x7b,
-    .chirp_freq_hex = 0x76a,
-    .actual_chirp = 22.993824,
-    .detuning = 700.000000};
-
-// constexpr MiniG::dds_params_t inter_dds_params_5 = {
-//     .mult = 14,
-//     .clk_transition_hex = 0x17191cab,
-//     .chirp_start_hex = 0x1860cabf,
-//     .chirp_stop_hex = 0x234f5d30,
-//     .mw_time_hex = 0x61,
-//     .mw_freq_hex = 0x173f,
-//     .chirp_time_hex = 0x61,
-//     .chirp_freq_hex = 0x7a3,
-//     .actual_chirp = 22.993826,
-//     .detuning = 700.000000};
-
-constexpr MiniG::dds_params_t inter_dds_params_6 = {
+constexpr MiniG::dds_params_t inter_dds_params_7 = {
     .mult = 20,
     .clk_transition_hex = 0x102b2dab,
     .chirp_start_hex = 0x11108dec,
@@ -82,7 +94,7 @@ constexpr MiniG::dds_params_t inter_dds_params_6 = {
     .actual_chirp = 22.993834,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_7 = {
+constexpr MiniG::dds_params_t inter_dds_params_8 = {
     .mult = 10,
     .clk_transition_hex = 0x20565b56,
     .chirp_start_hex = 0x22211bd9,
@@ -94,79 +106,19 @@ constexpr MiniG::dds_params_t inter_dds_params_7 = {
     .actual_chirp = 22.993856,
     .detuning = 700.000000};
 
-// constexpr MiniG::dds_params_t inter_dds_params_8 = {
-//     .mult = 12,
-//     .clk_transition_hex = 0x1af2a172,
-//     .chirp_start_hex = 0x1c70ec8a,
-//     .chirp_stop_hex = 0x2931ee19,
-//     .mw_time_hex = 0xab,
-//     .mw_freq_hex = 0x37c8,
-//     .chirp_time_hex = 0xab,
-//     .chirp_freq_hex = 0x1253,
-//     .actual_chirp = 22.993864,
-//     .detuning = 700.000000};
-
 constexpr MiniG::dds_params_t inter_dds_params_9 = {
-    .mult = 15,
-    .clk_transition_hex = 0x158ee78e,
-    .chirp_start_hex = 0x16c0bd3b,
-    .chirp_stop_hex = 0x20f4be97,
-    .mw_time_hex = 0x4f,
-    .mw_freq_hex = 0x107e,
-    .chirp_time_hex = 0x4f,
-    .chirp_freq_hex = 0x56b,
-    .actual_chirp = 22.993868,
-    .detuning = 700.000000};
-
-// constexpr MiniG::dds_params_t inter_dds_params_10 = {
-//     .mult = 17,
-//     .clk_transition_hex = 0x13059f23,
-//     .chirp_start_hex = 0x141379cb,
-//     .chirp_stop_hex = 0x1d142fdd,
-//     .mw_time_hex = 0x94,
-//     .mw_freq_hex = 0x180e,
-//     .chirp_time_hex = 0x94,
-//     .chirp_freq_hex = 0x7e7,
-//     .actual_chirp = 22.993875,
-//     .detuning = 700.000000};
- 
-constexpr MiniG::dds_params_t inter_dds_params_11 = {
-    .mult = 19,
-    .clk_transition_hex = 0x110507a6,
-    .chirp_start_hex = 0x11f67a72,
-    .chirp_stop_hex = 0x1a0496a2,
-    .mw_time_hex = 0xc0,
-    .mw_freq_hex = 0x18fc,
-    .chirp_time_hex = 0xc0,
-    .chirp_freq_hex = 0x835,
+    .mult = 17,
+    .clk_transition_hex = 0x13059f23,
+    .chirp_start_hex = 0x141379cb,
+    .chirp_stop_hex = 0x1d142fdd,
+    .mw_time_hex = 0x94,
+    .mw_freq_hex = 0x180e,
+    .chirp_time_hex = 0x94,
+    .chirp_freq_hex = 0x7e7,
     .actual_chirp = 22.993875,
     .detuning = 700.000000};
 
-// constexpr MiniG::dds_params_t inter_dds_params_12 = {
-//     .mult = 10,
-//     .clk_transition_hex = 0x20565b56,
-//     .chirp_start_hex = 0x22211bd9,
-//     .chirp_stop_hex = 0x316f1e66,
-//     .mw_time_hex = 0x9d,
-//     .mw_freq_hex = 0x49c0,
-//     .chirp_time_hex = 0x9d,
-//     .chirp_freq_hex = 0x183a,
-//     .actual_chirp = 22.993880,
-//     .detuning = 700.000000};
-
-// constexpr MiniG::dds_params_t inter_dds_params_13 = {
-//     .mult = 12,
-//     .clk_transition_hex = 0x1af2a172,
-//     .chirp_start_hex = 0x1c70ec8a,
-//     .chirp_stop_hex = 0x2931eed8,
-//     .mw_time_hex = 0xee,
-//     .mw_freq_hex = 0x4da4,
-//     .chirp_time_hex = 0xee,
-//     .chirp_freq_hex = 0x1981,
-//     .actual_chirp = 22.993885,
-//     .detuning = 700.000000};
-
-constexpr MiniG::dds_params_t inter_dds_params_14 = {
+constexpr MiniG::dds_params_t inter_dds_params_10 = {
     .mult = 14,
     .clk_transition_hex = 0x17191cab,
     .chirp_start_hex = 0x1860cabf,
@@ -178,19 +130,7 @@ constexpr MiniG::dds_params_t inter_dds_params_14 = {
     .actual_chirp = 22.993891,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_15 = {
-    .mult = 10,
-    .clk_transition_hex = 0x20565b56,
-    .chirp_start_hex = 0x22211bd9,
-    .chirp_stop_hex = 0x316f1f71,
-    .mw_time_hex = 0x9b,
-    .mw_freq_hex = 0x48d0,
-    .chirp_time_hex = 0x9b,
-    .chirp_freq_hex = 0x17eb,
-    .actual_chirp = 22.993904,
-    .detuning = 700.000000};
-
-constexpr MiniG::dds_params_t inter_dds_params_16 = {
+constexpr MiniG::dds_params_t inter_dds_params_11 = {
     .mult = 11,
     .clk_transition_hex = 0x1d65c765,
     .chirp_start_hex = 0x1f06d37f,
@@ -202,79 +142,19 @@ constexpr MiniG::dds_params_t inter_dds_params_16 = {
     .actual_chirp = 22.993910,
     .detuning = 700.000000};
 
-// constexpr MiniG::dds_params_t inter_dds_params_17 = {
-//     .mult = 11,
-//     .clk_transition_hex = 0x1d65c765,
-//     .chirp_start_hex = 0x1f06d37f,
-//     .chirp_stop_hex = 0x2cf0a8fc,
-//     .mw_time_hex = 0xe0,
-//     .mw_freq_hex = 0x56f6,
-//     .chirp_time_hex = 0xe0,
-//     .chirp_freq_hex = 0x1c91,
-//     .actual_chirp = 22.993923,
-//     .detuning = 700.000000};
-
-constexpr MiniG::dds_params_t inter_dds_params_18 = {
-    .mult = 19,
-    .clk_transition_hex = 0x110507a6,
-    .chirp_start_hex = 0x11f67a72,
-    .chirp_stop_hex = 0x1a0497bd,
-    .mw_time_hex = 0xe3,
-    .mw_freq_hex = 0x1d89,
-    .chirp_time_hex = 0xe3,
-    .chirp_freq_hex = 0x9b4,
-    .actual_chirp = 22.993924,
+constexpr MiniG::dds_params_t inter_dds_params_12 = {
+    .mult = 16,
+    .clk_transition_hex = 0x1435f916,
+    .chirp_start_hex = 0x1554b167,
+    .chirp_stop_hex = 0x1ee57440,
+    .mw_time_hex = 0xef,
+    .mw_freq_hex = 0x2bdb,
+    .chirp_time_hex = 0xef,
+    .chirp_freq_hex = 0xe68,
+    .actual_chirp = 22.993926,
     .detuning = 700.000000};
 
-// constexpr MiniG::dds_params_t inter_dds_params_19 = {
-//     .mult = 16,
-//     .clk_transition_hex = 0x1435f916,
-//     .chirp_start_hex = 0x1554b167,
-//     .chirp_stop_hex = 0x1ee57440,
-//     .mw_time_hex = 0xef,
-//     .mw_freq_hex = 0x2bdb,
-//     .chirp_time_hex = 0xef,
-//     .chirp_freq_hex = 0xe68,
-//     .actual_chirp = 22.993926,
-//     .detuning = 700.000000};
-
-constexpr MiniG::dds_params_t inter_dds_params_20 = {
-    .mult = 20,
-    .clk_transition_hex = 0x102b2dab,
-    .chirp_start_hex = 0x11108dec,
-    .chirp_stop_hex = 0x18b79041,
-    .mw_time_hex = 0x99,
-    .mw_freq_hex = 0x11f7,
-    .chirp_time_hex = 0x99,
-    .chirp_freq_hex = 0x5e7,
-    .actual_chirp = 22.993928,
-    .detuning = 700.000000};
-
-// constexpr MiniG::dds_params_t inter_dds_params_21 = {
-//     .mult = 12,
-//     .clk_transition_hex = 0x1af2a172,
-//     .chirp_start_hex = 0x1c70ec8a,
-//     .chirp_stop_hex = 0x2931f0c1,
-//     .mw_time_hex = 0x43,
-//     .mw_freq_hex = 0x15db,
-//     .chirp_time_hex = 0x43,
-//     .chirp_freq_hex = 0x72e,
-//     .actual_chirp = 22.993937,
-//     .detuning = 700.000000};
-// 
-// constexpr MiniG::dds_params_t inter_dds_params_22 = {
-//     .mult = 11,
-//     .clk_transition_hex = 0x1d65c765,
-//     .chirp_start_hex = 0x1f06d37f,
-//     .chirp_stop_hex = 0x2cf0a996,
-//     .mw_time_hex = 0xcf,
-//     .mw_freq_hex = 0x505d,
-//     .chirp_time_hex = 0xcf,
-//     .chirp_freq_hex = 0x1a66,
-//     .actual_chirp = 22.993938,
-//     .detuning = 700.000000};
-
-constexpr MiniG::dds_params_t inter_dds_params_23 = {
+constexpr MiniG::dds_params_t inter_dds_params_13 = {
     .mult = 15,
     .clk_transition_hex = 0x158ee78e,
     .chirp_start_hex = 0x16c0bd3b,
@@ -286,82 +166,52 @@ constexpr MiniG::dds_params_t inter_dds_params_23 = {
     .actual_chirp = 22.993941,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_24 = {
-    .mult = 17,
-    .clk_transition_hex = 0x13059f23,
-    .chirp_start_hex = 0x141379cb,
-    .chirp_stop_hex = 0x1d1431e0,
-    .mw_time_hex = 0x91,
-    .mw_freq_hex = 0x1791,
-    .chirp_time_hex = 0x91,
-    .chirp_freq_hex = 0x7be,
-    .actual_chirp = 22.993953,
+constexpr MiniG::dds_params_t inter_dds_params_14 = {
+    .mult = 11,
+    .clk_transition_hex = 0x1d65c765,
+    .chirp_start_hex = 0x1f06d37f,
+    .chirp_stop_hex = 0x2cf0aa4c,
+    .mw_time_hex = 0xbe,
+    .mw_freq_hex = 0x49c3,
+    .chirp_time_hex = 0xbe,
+    .chirp_freq_hex = 0x183b,
+    .actual_chirp = 22.993956,
     .detuning = 700.000000};
 
-// constexpr MiniG::dds_params_t inter_dds_params_25 = {
-//     .mult = 10,
-//     .clk_transition_hex = 0x20565b56,
-//     .chirp_start_hex = 0x22211bd9,
-//     .chirp_stop_hex = 0x316f219c,
-//     .mw_time_hex = 0x97,
-//     .mw_freq_hex = 0x46ef,
-//     .chirp_time_hex = 0x97,
-//     .chirp_freq_hex = 0x174d,
-//     .actual_chirp = 22.993953,
-//     .detuning = 700.000000};
-
-// constexpr MiniG::dds_params_t inter_dds_params_26 = {
-//     .mult = 11,
-//     .clk_transition_hex = 0x1d65c765,
-//     .chirp_start_hex = 0x1f06d37f,
-//     .chirp_stop_hex = 0x2cf0aa4c,
-//     .mw_time_hex = 0xbe,
-//     .mw_freq_hex = 0x49c3,
-//     .chirp_time_hex = 0xbe,
-//     .chirp_freq_hex = 0x183b,
-//     .actual_chirp = 22.993956,
-//     .detuning = 700.000000};
-
-constexpr MiniG::dds_params_t inter_dds_params_27 = {
-    .mult = 14,
-    .clk_transition_hex = 0x17191cab,
-    .chirp_start_hex = 0x1860cabf,
-    .chirp_stop_hex = 0x234f618d,
-    .mw_time_hex = 0x54,
-    .mw_freq_hex = 0x1421,
-    .chirp_time_hex = 0x54,
-    .chirp_freq_hex = 0x69d,
-    .actual_chirp = 22.993966,
+constexpr MiniG::dds_params_t inter_dds_params_15 = {
+    .mult = 11,
+    .clk_transition_hex = 0x1d65c765,
+    .chirp_start_hex = 0x1f06d37f,
+    .chirp_stop_hex = 0x2cf0ab25,
+    .mw_time_hex = 0xad,
+    .mw_freq_hex = 0x432a,
+    .chirp_time_hex = 0xad,
+    .chirp_freq_hex = 0x1610,
+    .actual_chirp = 22.993978,
     .detuning = 700.000000};
 
-constexpr size_t NUM_POINTS_INTER = 8;
+constexpr MiniG::dds_params_t inter_dds_params_16 = {
+    .mult = 11,
+    .clk_transition_hex = 0x1d65c765,
+    .chirp_start_hex = 0x1f06d37f,
+    .chirp_stop_hex = 0x2cf0ac2e,
+    .mw_time_hex = 0x9c,
+    .mw_freq_hex = 0x3c90,
+    .chirp_time_hex = 0x9c,
+    .chirp_freq_hex = 0x13e5,
+    .actual_chirp = 22.994004,
+    .detuning = 700.000000};
+
+constexpr size_t NUM_POINTS_INTER = 9;
 constexpr MiniG::dds_params_t fringes[NUM_POINTS_INTER] = {
     // inter_dds_params_0,
-    inter_dds_params_1,
-    // inter_dds_params_2,
-    // inter_dds_params_3,
-    // inter_dds_params_4,
-    // inter_dds_params_5,
-    inter_dds_params_6,
-    inter_dds_params_7,
-    // inter_dds_params_8,
-    inter_dds_params_9, 
-    // inter_dds_params_10,
+    // inter_dds_params_1,
+    inter_dds_params_2,
+    inter_dds_params_3,  inter_dds_params_4,  inter_dds_params_5,
+    inter_dds_params_6,  inter_dds_params_7,  inter_dds_params_8,
+    inter_dds_params_9,  inter_dds_params_10,
     // inter_dds_params_11,
-    // inter_dds_params_12,
-    // inter_dds_params_13,
-    inter_dds_params_14,
-    inter_dds_params_15,
-    // inter_dds_params_16,
-    //  inter_dds_params_17,
-    inter_dds_params_18,
-    // inter_dds_params_19,
-    // inter_dds_params_20,
-    // inter_dds_params_21,
-    // inter_dds_params_22,
-    inter_dds_params_23,
-    // inter_dds_params_24,
-    // inter_dds_params_25,
-    // inter_dds_params_26,
-    // inter_dds_params_27,
+    // inter_dds_params_12, inter_dds_params_13,
+    // inter_dds_params_14,
+    // inter_dds_params_15, inter_dds_params_16,
 };

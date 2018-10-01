@@ -37,17 +37,17 @@ uint16_t samples[num_samples];
 #include "declare_spectroscopy.h"
 
 constexpr float AO1_MOT = 7.05;
-constexpr float AO2_MOT = 2.3;
+constexpr float AO2_MOT = 1.76;
 constexpr float AO3_MOT = 5;
-constexpr float EO_MOT = 8.9;
+constexpr float EO_MOT = 8.925;
 constexpr float NS_MOT = 0.34;
 constexpr float WE_MOT = 1.1;
 constexpr float BIAS_MOT = 0.14;
 
 constexpr float AO1_PGC = 6.5;
-constexpr float AO2_PGC = 2.15;
+constexpr float AO2_PGC = 1.75;
 constexpr float AO3_PGC = 1.85;
-constexpr float EO_PGC = 9.85;
+constexpr float EO_PGC = 9.58;
 
 constexpr float AO1_MW = 7.8;
 constexpr float AO2_MW = 0;
@@ -57,18 +57,19 @@ constexpr float WE_MW = 8;
 constexpr float EO_MW = 9.21;
 constexpr float BIAS_MW = 0.14;
 
-constexpr float AO1_RAMAN = 8.3;
-constexpr float AO2_RAMAN = 10;
-// constexpr float AO3_RAMAN = 3.3;
+constexpr float AO1_RAMAN = 8.1;
+constexpr float AO2_RAMAN = 3;
 constexpr float NS_RAMAN = 0;
 constexpr float WE_RAMAN = 0;
 constexpr float EO_RAMAN = 6.5;
-constexpr float BIAS_RAMAN = 10;
+constexpr float BIAS_RAMAN = 5;
 
-constexpr float AO1_IMAGE = 7.3;
+constexpr float AO1_IMAGE = 7.18;
 constexpr float AO2_IMAGE = 1.75;
-// constexpr float AO3_IMAGE = 10;
-constexpr float EO_IMAGE = 8.92;
+constexpr float NS_IMAGE = 0.04;
+constexpr float WE_IMAGE = 0.25;
+constexpr float EO_IMAGE = 8.94;
+
 
 } // namepsace
 
@@ -107,7 +108,7 @@ MiniG::MiniG() :
       
       // DDS
       dds_spi_{PB_5_ALT0, PB_4_ALT0, PB_3_ALT0},
-      dds_{dds_spi_, dds_pins, 10000000 /* ref_freq */, 20 /* mult */},
+      dds_{dds_spi_, dds_pins, 20000000 /* ref_freq */, 20 /* mult */},
 
       // PIXI
       pixi_spi_{SPI_MOSI, SPI_MISO, SPI_SCK},
@@ -220,8 +221,9 @@ void MiniG::init() {
   MAX11300::Ramp image_on_ramps[] = {
       {ao1_freq_, to_dac(AO1_RAMAN), to_dac(AO1_IMAGE)},
       {ao2_atten_, to_dac(AO2_RAMAN), to_dac(AO2_IMAGE)},
-      // {ao3_atten_, to_dac(AO3_RAMAN), to_dac(AO3_IMAGE)},
       {eo_freq_, to_dac(EO_RAMAN), to_dac(EO_IMAGE)},
+      {ns_field_, to_dac(NS_RAMAN), to_dac(NS_IMAGE)},
+      {we_field_, to_dac(WE_RAMAN), to_dac(WE_IMAGE)},
   };
   image_on_ramp_.configured = 0;
   image_on_ramp_.num_ramps = ARRAYSIZE(image_on_ramps);
@@ -290,7 +292,7 @@ void MiniG::run() {
             pgc();
 
 #if !MW_RABI
-            int pulse = 190;
+            int pulse = 200;
 #endif
             mw(pulse);
             uint32_t T = 115;
@@ -367,7 +369,7 @@ void MiniG::run() {
 
         // Actual MOT Stage
         WRITE_IO(GPIOE, coils_ | analog_trigger_, BITS_NONE);
-        bsm_delay_ms(325);
+        bsm_delay_ms(300);
 
         // Turn the MOT off
         WRITE_IO(GPIOE, BITS_NONE, coils_ | analog_trigger_);
@@ -424,35 +426,35 @@ void MiniG::run() {
         bsm_delay_ms(8);
 
         // Freefall
-        WRITE_IO(GPIOE, ao_3_ | inter_dds_profile_pin_, BITS_NONE);
+        WRITE_IO(GPIOE, inter_dds_profile_pin_, BITS_NONE);
         bsm_delay_ms(5);
 
         WRITE_IO(GPIOG, scope_, BITS_NONE);
 #if INTER
-        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
-        bsm_delay_us(7);
+        WRITE_IO(GPIOE, ao_2_ | ao_3_, BITS_NONE);
+        bsm_delay_us(5);
 #endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_| ao_3_);
 
         bsm_delay_ms(T);
 
 #if INTER | SPECTROSCOPY
-        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
-        bsm_delay_us(14);
+        WRITE_IO(GPIOE, ao_2_| ao_3_, BITS_NONE);
+        bsm_delay_us(10);
 #endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_| ao_3_);
 
         bsm_delay_ms(T);
 
 #if INTER
-        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
-        bsm_delay_us(7);
+        WRITE_IO(GPIOE, ao_2_| ao_3_, BITS_NONE);
+        bsm_delay_us(5);
 #elif RAMAN_RABI
-    WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+    WRITE_IO(GPIOE, ao_2_| ao_3_, BITS_NONE);
     bsm_delay_us(raman);
 #endif
 
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_| ao_3_);
 
         WRITE_IO(GPIOG, BITS_NONE, scope_);
         bsm_delay_us(fall);
@@ -461,7 +463,7 @@ void MiniG::run() {
       }
 
       void MiniG::image() {
-        WRITE_IO(GPIOE, cooling_shutter_ | dds_switch_ | raman_eo_, ao_3_);
+        WRITE_IO(GPIOE, cooling_shutter_ | dds_switch_ | raman_eo_, BITS_NONE);
         pixi_.run_ramps(&image_on_ramp_);
         // takes 3 ms
         bsm_delay_ms(5);

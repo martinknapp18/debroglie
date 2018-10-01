@@ -149,6 +149,7 @@ void AD9959::set_fr1(AD9959::ModLevel modlevel, uint8_t mult) {
 
   fr1_val.pll_divider_ratio = mult;
   fr1_val.charge_pump_control = AD9959::uA75;
+  fr1_val.vco_gain = 0;
 
   // Looks like its used for rising and falling rates. Don't turn off til I
   // test.

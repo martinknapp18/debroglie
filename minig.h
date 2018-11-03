@@ -69,6 +69,7 @@ private:
   drivers::max11300::MAX11300::MAX11300_Ports bias_field_;
   // Analog Input
   drivers::max11300::MAX11300::MAX11300_Ports photodiode_;
+  drivers::max11300::MAX11300::MAX11300_Ports vibration_;
 
   SPI dds_spi_;
   drivers::ad9959::AD9959 dds_;

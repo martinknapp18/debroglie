@@ -2,12 +2,14 @@
 #include "drivers/max11300/max11300.h"
 #include "mbed.h"
 #include "minig.h"
+#include "realtime.h"
+
 #define WRITE_IO(PORT, ON_BITS, OFF_BITS)                                      \
   PORT->ODR = ((PORT->ODR & ~(OFF_BITS)) | (ON_BITS))
 #define BITS_NONE (0)
 
-
 #define RUN_MINIG 1
+#define RUN_REALTIME 0
 
 // volatile uint8_t triggered = 0;
 // void trigger() {
@@ -20,13 +22,17 @@ int main() {
   printf("\nhello debugging!\n");
   enableCycleCounter();
 
+#if RUN_MINIG
   MiniG minig;
   minig.init();
-/// Init ends with reset so I can do whatever I want out here.
-
-#if RUN_MINIG
   while (1) {
     minig.run();
+  }
+#elif RUN_REALTIME
+  RealTimeMiniG minig;
+  minig.init();
+  minig.run();
+  while (1) {
   }
 #endif
 

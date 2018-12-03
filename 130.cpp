@@ -20,10 +20,10 @@ using drivers::max11300::MAX11300;
 #define SPECTROSCOPY 0
 #define RAMAN_RABI 0
 #define MW_RABI 0
-#define INTER 1
+#define INTER 0
 #define DEBUG_PD 0
-#define USE_CAMERA 0
-#define CENTER_PD 0
+#define USE_CAMERA 1
+#define CENTER_PD 1
 #define TUNE 0
 
 namespace {
@@ -315,7 +315,7 @@ void MiniG::run() {
   for(float var = 6.0; var <= 8.0; var += 0.1) {
 #endif
 #if CENTER_PD
-  for(float d_fall = -2500; d_fall <= 6000; d_fall += 500) {
+  for(float d_fall = -3000; d_fall <= 0; d_fall += 500) {
 #endif
 #if MW_RABI
   for (int pulse = 0; pulse <= 800; pulse += 20) {
@@ -346,8 +346,8 @@ void MiniG::run() {
           int pulse = 250;
 #endif
           mw(pulse);
-          uint32_t T = 120;
-          float fall_ms = 3.5;
+          uint32_t T = 130;
+          float fall_ms = 3;
           uint32_t fall_us = static_cast<uint32_t>(fall_ms * 1000);
 #if CENTER_PD
           fall_us += d_fall;
@@ -441,7 +441,7 @@ void MiniG::run() {
 
         // Turn off PGC
         WRITE_IO(GPIOE, BITS_NONE, cooling_shutter_);
-        bsm_delay_ms(7);
+        bsm_delay_ms(6);
       }
 
       void MiniG::mw(int pulse_duration) {
@@ -464,9 +464,9 @@ void MiniG::run() {
             ao_3_ |
             mot_eo_ | mw_dds_profile_pin_, BITS_NONE);
 #if MW_RABI
-        bsm_delay_us(10000);
+        bsm_delay_us(4000);
 #else
-    bsm_delay_us(10000 - pulse_duration);
+    bsm_delay_us(4000 - pulse_duration);
 #endif
       }
 
@@ -476,50 +476,38 @@ void MiniG::run() {
                  ao_3_ | cooling_shutter_ | raman_eo_ | dds_switch_);
         pixi_.run_ramps(&raman_on_ramp_);
         // last 5 ms
-        bsm_delay_ms(5);
+        bsm_delay_ms(2);
 
         WRITE_IO(GPIOG, scope_, BITS_NONE);
         // Freefall
-        WRITE_IO(GPIOE, inter_dds_profile_pin_ | ao_3_, BITS_NONE);
-        bsm_delay_ms(5);
+        WRITE_IO(GPIOE, inter_dds_profile_pin_, BITS_NONE);
 
 #if INTER
-        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+        WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);
         bsm_delay_us(5);
 #endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_|ao_3_);
 
-        bsm_delay_ms(1);
-        WRITE_IO(GPIOE, BITS_NONE, ao_3_);
+        bsm_delay_ms(T);
 
-        bsm_delay_ms(T - 6);
-
-        WRITE_IO(GPIOE, ao_3_, BITS_NONE);
-        bsm_delay_ms(5);
 
 #if INTER | SPECTROSCOPY
-        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+        WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);
         bsm_delay_us(10);
 #elif RAMAN_RABI
-    WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+    WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);
     bsm_delay_us(raman);
 #endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
-        bsm_delay_ms(1);
-        WRITE_IO(GPIOE, BITS_NONE, ao_3_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_|ao_3_);
 
-        bsm_delay_ms(T - 6);
+        bsm_delay_ms(T);
 
-        WRITE_IO(GPIOE, ao_3_, BITS_NONE);
-        bsm_delay_ms(5);
 #if INTER
-        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+        WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);
         bsm_delay_us(5);
 #endif
 
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
-        bsm_delay_ms(1);
-        WRITE_IO(GPIOE, BITS_NONE, ao_3_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_|ao_3_);
 
         WRITE_IO(GPIOG, BITS_NONE, scope_);
         bsm_delay_us(fall);
@@ -535,7 +523,7 @@ void MiniG::run() {
 
         // Stabilize
         WRITE_IO(GPIOE, BITS_NONE, mot_eo_);
-        bsm_delay_ms(2);
+        bsm_delay_ms(1);
         bsm_delay_us(50);
 
         // Turn laser on

@@ -53,10 +53,12 @@ BSP := bsp
 # main
 OBJECTS += main.o
 
+CFLAGS += -I$(NANOPB_DIR)
 # drivers
 OBJECTS += drivers/max11300/max11300.o
 OBJECTS += drivers/ad9959/ad9959.o
 OBJECTS += minig.o
+OBJECTS += realtime.o
 
 SYS_OBJECTS += $(MBED)/drivers/AnalogIn.o
 SYS_OBJECTS += $(MBED)/drivers/BusIn.o
@@ -419,7 +421,6 @@ LD_SYS_LIBS :=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys -Wl,--en
 # Rules
 
 .PHONY: all lst size
-
 
 all: $(PROJECT).bin $(PROJECT).hex size
 

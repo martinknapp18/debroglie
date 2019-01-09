@@ -22,9 +22,9 @@ using drivers::max11300::MAX11300;
 #define MW_RABI 0
 #define INTER 0
 #define DEBUG_PD 0
-#define USE_CAMERA 1
-#define CENTER_PD 1
-#define TUNE 0
+#define USE_CAMERA 0
+#define CENTER_PD 0
+#define TUNE 1
 
 namespace {
 
@@ -54,7 +54,7 @@ uint16_t samples[num_samples];
 #endif
 #include "declare_spectroscopy.h"
 
-constexpr float AO1_MOT = 6.5;
+constexpr float AO1_MOT = 6.6;
 constexpr float AO2_MOT = 1.76;
 constexpr float AO3_MOT = 5;
 constexpr float EO_MOT = 8.93;
@@ -271,7 +271,7 @@ void MiniG::reset(float var) {
                mw_dds_profile_pin_ | inter_dds_profile_pin_);
   WRITE_IO(GPIOG, BITS_NONE, under_vac_shutter_ | scope_);
 
-  pixi_.single_ended_dac_write(ao1_freq_, to_dac(AO1_MOT));
+  // pixi_.single_ended_dac_write(ao1_freq_, to_dac(AO1_MOT));
   pixi_.single_ended_dac_write(ao2_atten_, to_dac(AO2_MOT));
   pixi_.single_ended_dac_write(ao3_atten_, to_dac(AO3_MOT));
   pixi_.single_ended_dac_write(z_field_, to_dac(0));
@@ -281,18 +281,18 @@ void MiniG::reset(float var) {
   pixi_.single_ended_dac_write(bias_field_, to_dac(0));
 
 #if TUNE
-  // MAX11300::Ramp image_on_ramps[] = {
-  //     {ao1_freq_, to_dac(AO1_RAMAN), to_dac(var)},
-  //     {ao2_atten_, to_dac(AO2_RAMAN), to_dac(AO2_IMAGE)},
-  //     {eo_freq_, to_dac(EO_RAMAN), to_dac(EO_IMAGE)},
-  //     {ns_field_, to_dac(NS_RAMAN), to_dac(NS_IMAGE)},
-  //     {we_field_, to_dac(WE_RAMAN), to_dac(WE_IMAGE)},
-  // };
-  // image_on_ramp_.configured = 1;
-  // image_on_ramp_.num_ramps = ARRAYSIZE(image_on_ramps);
-  // image_on_ramp_.num_steps = 30;
-  // image_on_ramp_.step_time_us = 100;
-  // pixi_.prepare_ramps(&image_on_ramp_, image_on_ramps);
+  MAX11300::Ramp image_on_ramps[] = {
+      {ao1_freq_, to_dac(AO1_RAMAN), to_dac(var)},
+      {ao2_atten_, to_dac(AO2_RAMAN), to_dac(AO2_IMAGE)},
+      {eo_freq_, to_dac(EO_RAMAN), to_dac(EO_IMAGE)},
+      {ns_field_, to_dac(NS_RAMAN), to_dac(NS_IMAGE)},
+      {we_field_, to_dac(WE_RAMAN), to_dac(WE_IMAGE)},
+  };
+  image_on_ramp_.configured = 1;
+  image_on_ramp_.num_ramps = ARRAYSIZE(image_on_ramps);
+  image_on_ramp_.num_steps = 30;
+  image_on_ramp_.step_time_us = 100;
+  pixi_.prepare_ramps(&image_on_ramp_, image_on_ramps);
  
    // MAX11300::Ramp pgc_on_ramps[] = {
    //     // {ao1_freq_, to_dac(AO1_MOT), to_dac(AO1_PGC)},
@@ -312,7 +312,7 @@ void MiniG::reset(float var) {
 
 void MiniG::run() {
 #if TUNE
-  for(float var = 6.0; var <= 8.0; var += 0.1) {
+  for(float var = 6.9; var <= 7.5; var += 0.1) {
 #endif
 #if CENTER_PD
   for(float d_fall = -3000; d_fall <= 0; d_fall += 500) {
@@ -347,7 +347,7 @@ void MiniG::run() {
 #endif
           mw(pulse);
           uint32_t T = 130;
-          float fall_ms = 3;
+          float fall_ms = 0.5;
           uint32_t fall_us = static_cast<uint32_t>(fall_ms * 1000);
 #if CENTER_PD
           fall_us += d_fall;

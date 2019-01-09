@@ -22,7 +22,7 @@ using drivers::max11300::MAX11300;
 #define MW_RABI 0
 #define INTER 1
 #define DEBUG_PD 0
-#define USE_CAMERA 1
+#define USE_CAMERA 0
 #define CENTER_PD 0
 #define TUNE 0
 
@@ -49,19 +49,18 @@ uint16_t samples[num_samples];
 #else
 // #include "declare_T_80_fringes.h"
 // #include "declare_T_120_fringes.h"
-// #include "declare_T_120_16_fringes.h"
-#include "T_130_fringes.h"
+#include "declare_T_120_16_fringes.h"
 // #include "declare_T_115_fringes_17e_7.h"
 #endif
 #include "declare_spectroscopy.h"
 
-constexpr float AO1_MOT = 6.6;
+constexpr float AO1_MOT = 6.5;
 constexpr float AO2_MOT = 1.76;
 constexpr float AO3_MOT = 5;
 constexpr float EO_MOT = 8.93;
-constexpr float NS_MOT = 0.7;
+constexpr float NS_MOT = 0.5;
 constexpr float WE_MOT = 1.2;
-constexpr float BIAS_MOT = 0.11;
+constexpr float BIAS_MOT = 0.15;
 
 constexpr float AO1_PGC = AO1_MOT;
 constexpr float AO2_PGC = 2.20;
@@ -72,18 +71,18 @@ constexpr float AO1_MW = 7.8;
 constexpr float AO2_MW = 0;
 constexpr float AO3_MW = 10;
 constexpr float NS_MW = NS_MOT;
-constexpr float WE_MW = 2.2;
+constexpr float WE_MW = 3.2;
 constexpr float EO_MW = 9.21;
-constexpr float BIAS_MW = BIAS_MOT;
+constexpr float BIAS_MW = 0.15;
 
 constexpr float AO1_RAMAN = 8.1;
-constexpr float AO2_RAMAN = 2.5;
+constexpr float AO2_RAMAN = 3;
 constexpr float NS_RAMAN = 0;
 constexpr float WE_RAMAN = 0;
 constexpr float EO_RAMAN = 6.5;
-constexpr float BIAS_RAMAN = 3;
+constexpr float BIAS_RAMAN = 6;
 
-constexpr float AO1_IMAGE = 7.30;
+constexpr float AO1_IMAGE = 7.2;
 constexpr float AO2_IMAGE = 1.75;
 constexpr float NS_IMAGE = 0.04;
 constexpr float WE_IMAGE = 0.25;
@@ -282,7 +281,6 @@ void MiniG::reset(float var) {
   pixi_.single_ended_dac_write(bias_field_, to_dac(0));
 
 #if TUNE
-  // pixi_.single_ended_dac_write(ao1_freq_, to_dac(var));
   // MAX11300::Ramp image_on_ramps[] = {
   //     {ao1_freq_, to_dac(AO1_RAMAN), to_dac(var)},
   //     {ao2_atten_, to_dac(AO2_RAMAN), to_dac(AO2_IMAGE)},
@@ -314,10 +312,10 @@ void MiniG::reset(float var) {
 
 void MiniG::run() {
 #if TUNE
-  for(float var = 6.4; var <= 7.5; var += 0.1) {
+  for(float var = 6.0; var <= 8.0; var += 0.1) {
 #endif
 #if CENTER_PD
-  for(float d_fall = -3000; d_fall <= 0; d_fall += 500) {
+  for(float d_fall = -2500; d_fall <= 6000; d_fall += 500) {
 #endif
 #if MW_RABI
   for (int pulse = 0; pulse <= 800; pulse += 20) {
@@ -345,11 +343,11 @@ void MiniG::run() {
           pgc();
 
 #if !MW_RABI
-          int pulse = 300;
+          int pulse = 250;
 #endif
           mw(pulse);
-          uint32_t T = 130;
-          float fall_ms = 0.5;
+          uint32_t T = 120;
+          float fall_ms = 3.5;
           uint32_t fall_us = static_cast<uint32_t>(fall_ms * 1000);
 #if CENTER_PD
           fall_us += d_fall;
@@ -425,7 +423,7 @@ void MiniG::run() {
 
         // Actual MOT Stage
         WRITE_IO(GPIOE, coils_, BITS_NONE);
-        bsm_delay_ms(150);
+        bsm_delay_ms(130);
 
         // Turn the MOT off
         WRITE_IO(GPIOE, BITS_NONE, coils_);
@@ -443,7 +441,7 @@ void MiniG::run() {
 
         // Turn off PGC
         WRITE_IO(GPIOE, BITS_NONE, cooling_shutter_);
-        bsm_delay_ms(6);
+        bsm_delay_ms(7);
       }
 
       void MiniG::mw(int pulse_duration) {
@@ -466,9 +464,9 @@ void MiniG::run() {
             ao_3_ |
             mot_eo_ | mw_dds_profile_pin_, BITS_NONE);
 #if MW_RABI
-        bsm_delay_us(4000);
+        bsm_delay_us(10000);
 #else
-    bsm_delay_us(4000 - pulse_duration);
+    bsm_delay_us(10000 - pulse_duration);
 #endif
       }
 
@@ -478,38 +476,50 @@ void MiniG::run() {
                  ao_3_ | cooling_shutter_ | raman_eo_ | dds_switch_);
         pixi_.run_ramps(&raman_on_ramp_);
         // last 5 ms
-        bsm_delay_ms(2);
-
-        // Freefall
-        WRITE_IO(GPIOE, inter_dds_profile_pin_, BITS_NONE);
-
-#if INTER
-        WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);
-        bsm_delay_us(5);
-#endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_|ao_3_);
-
-        bsm_delay_ms(T);
-
+        bsm_delay_ms(5);
 
         WRITE_IO(GPIOG, scope_, BITS_NONE);
-#if INTER | SPECTROSCOPY
-        WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);
-        bsm_delay_us(10);
-#elif RAMAN_RABI
-    WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);
-    bsm_delay_us(raman);
-#endif
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_|ao_3_);
-
-        bsm_delay_ms(T);
+        // Freefall
+        WRITE_IO(GPIOE, inter_dds_profile_pin_ | ao_3_, BITS_NONE);
+        bsm_delay_ms(5);
 
 #if INTER
-        WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);
+        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+        bsm_delay_us(5);
+#endif
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
+
+        bsm_delay_ms(1);
+        WRITE_IO(GPIOE, BITS_NONE, ao_3_);
+
+        bsm_delay_ms(T - 6);
+
+        WRITE_IO(GPIOE, ao_3_, BITS_NONE);
+        bsm_delay_ms(5);
+
+#if INTER | SPECTROSCOPY
+        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+        bsm_delay_us(10);
+#elif RAMAN_RABI
+    WRITE_IO(GPIOE, ao_2_, BITS_NONE);
+    bsm_delay_us(raman);
+#endif
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
+        bsm_delay_ms(1);
+        WRITE_IO(GPIOE, BITS_NONE, ao_3_);
+
+        bsm_delay_ms(T - 6);
+
+        WRITE_IO(GPIOE, ao_3_, BITS_NONE);
+        bsm_delay_ms(5);
+#if INTER
+        WRITE_IO(GPIOE, ao_2_, BITS_NONE);
         bsm_delay_us(5);
 #endif
 
-        WRITE_IO(GPIOE, BITS_NONE, ao_2_|ao_3_);
+        WRITE_IO(GPIOE, BITS_NONE, ao_2_);
+        bsm_delay_ms(1);
+        WRITE_IO(GPIOE, BITS_NONE, ao_3_);
 
         WRITE_IO(GPIOG, BITS_NONE, scope_);
         bsm_delay_us(fall);
@@ -525,7 +535,7 @@ void MiniG::run() {
 
         // Stabilize
         WRITE_IO(GPIOE, BITS_NONE, mot_eo_);
-        bsm_delay_ms(1);
+        bsm_delay_ms(2);
         bsm_delay_us(50);
 
         // Turn laser on

@@ -43,17 +43,12 @@ constexpr int16_t to_dac(double volts) {
 constexpr size_t num_samples = 1200;
 uint16_t samples[num_samples];
 
-#define USE_20e6_CLK 0
-#if USE_20e6_CLK
-#include "declare_20e6_fringes.h"
-#else
-// #include "declare_T_80_fringes.h"
-// #include "declare_T_120_fringes.h"
-// #include "declare_T_120_16_fringes.h"
-#include "T_130_fringes.h"
-// #include "declare_T_115_fringes_17e_7.h"
-#endif
-#include "declare_spectroscopy.h"
+// #include "dds_params/declare_T_80_fringes.h"
+// #include "dds_params/declare_T_120_fringes.h"
+// #include "dds_params/declare_T_120_16_fringes.h"
+#include "dds_params/T_130_fringes.h"
+// #include "dds_params/declare_T_115_fringes_17e_7.h"
+#include "dds_params/declare_spectroscopy.h"
 
 constexpr float AO1_MOT = 6.6;
 constexpr float AO2_MOT = 1.76;
@@ -126,39 +121,14 @@ MiniG::MiniG() :
       
       // DDS
       dds_spi_{PB_5_ALT0, PB_4_ALT0, PB_3_ALT0},
-#if USE_20e6_CLK
-      dds_{dds_spi_, dds_pins, 20000000 /* ref_freq */, 20 /* mult */},
-#else
       dds_{dds_spi_, dds_pins, 10000000 /* ref_freq */, 20 /* mult */},
-#endif
 
       // PIXI
       pixi_spi_{SPI_MOSI, SPI_MISO, SPI_SCK},
       pixi_{pixi_spi_, SPI_CS} {}
 // clang-format on
 
-// void MiniG::set_dds_params(double chirp_rate_kHz_p_ms,
-//                           double raman_detuning_kHz) {
-//
-//  constexpr double free_fall_time_s = .260;
-//  constexpr double num_steps = 500000;
-//  // constexpr double num_steps = 130;
-//  constexpr double num_steps_mw = 50000000;
-//  constexpr double clock_transition = 12631770;
-//  double chirp_start_hz = raman_detuning_kHz * 1000 + clock_transition;
-//  double chirp_stop_hz =
-//      chirp_start_hz + free_fall_time_s * 1000 * chirp_rate_kHz_p_ms * 1000;
-//  dds_.reset();
-//  dds_.set_freq_linear_sweep_params(AD9959::Channel0, chirp_start_hz,
-//                                    chirp_stop_hz, free_fall_time_s *
-//                                    num_steps,
-//                                    1 / num_steps);
-//  dds_.set_freq_linear_sweep_params(AD9959::Channel1, clock_transition,
-//                                    chirp_start_hz, .01 * num_steps_mw,
-//                                    1 / num_steps_mw);
-//  dds_.io_update();
-//}
-//
+
 void MiniG::set_dds_params(dds_params_t params) {
   dds_.reset();
   dds_.set_freq_linear_sweep_params(
@@ -264,12 +234,17 @@ void MiniG::init() {
   reset(AO1_MOT);
 }
 
-void MiniG::reset(float var) {
-  WRITE_IO(GPIOE, liquid_crystal_1_ | ao_3_ | raman_eo_ | m_lock_ |
-                      dds_switch_ | m_horn_switch_,
-           coils_ | ao_2_ | cooling_shutter_ | mot_eo_ | raman_eo_ |
-               analog_trigger_ | camera_ttl_ | laser_jump_ |
-               mw_dds_profile_pin_ | inter_dds_profile_pin_);
+void MiniG::reset(float var, bool k_up) {
+  uint32_t ON_PINS = liquid_crystal_1_ | ao_3_ | raman_eo_ | m_lock_ |
+                      dds_switch_ | m_horn_switch_;
+  uint32_t OFF_PINS = coils_ | ao_2_ | cooling_shutter_ | mot_eo_ | raman_eo_ |
+               analog_trigger_ | camera_ttl_ | laser_jump_;
+  if (k_up) {
+    OFF_PINS |= mw_dds_profile_pin_ | inter_dds_profile_pin_;
+  } else {
+    ON_PINS |= mw_dds_profile_pin_ | inter_dds_profile_pin_;
+  }
+  WRITE_IO(GPIOE, ON_PINS, OFF_PINS);
   WRITE_IO(GPIOG, BITS_NONE, under_vac_shutter_ | scope_);
 
   pixi_.single_ended_dac_write(ao1_freq_, to_dac(AO1_MOT));
@@ -446,7 +421,7 @@ void MiniG::run() {
         bsm_delay_ms(6);
       }
 
-      void MiniG::mw(int pulse_duration) {
+      void MiniG::mw(int pulse_duration, bool k_up) {
         WRITE_IO(GPIOE, cooling_shutter_,
                  laser_jump_ | liquid_crystal_1_ | ao_2_ | ao_3_);
 
@@ -462,9 +437,14 @@ void MiniG::run() {
         bsm_delay_ms(1);
 
         // Blow away
-        WRITE_IO(GPIOE,
-            ao_3_ |
-            mot_eo_ | mw_dds_profile_pin_, BITS_NONE);
+        uint32_t on_bits = ao_3_ | mot_eo_;
+        uint32_t off_bits = BITS_NONE;
+        if (k_up) {
+          on_bits |= mw_dds_profile_pin_;
+        } else {
+          off_bits |= mw_dds_profile_pin_;
+        }
+        WRITE_IO(GPIOE, on_bits, off_bits);
 #if MW_RABI
         bsm_delay_us(4000);
 #else
@@ -473,7 +453,7 @@ void MiniG::run() {
       }
 
       // Start Interformetry
-      void MiniG::interferometry(uint32_t T, uint32_t fall, uint32_t raman) {
+      void MiniG::interferometry(uint32_t T, uint32_t fall, uint32_t raman, bool k_up) {
         WRITE_IO(GPIOE, BITS_NONE,
                  ao_3_ | cooling_shutter_ | raman_eo_ | dds_switch_);
         pixi_.run_ramps(&raman_on_ramp_);
@@ -481,7 +461,11 @@ void MiniG::run() {
         bsm_delay_ms(2);
 
         // Freefall
+        if (k_up) {
         WRITE_IO(GPIOE, inter_dds_profile_pin_, BITS_NONE);
+        } else {
+        WRITE_IO(GPIOE, BITS_NONE, inter_dds_profile_pin_);
+        }
 
 #if INTER
         WRITE_IO(GPIOE, ao_2_|ao_3_, BITS_NONE);

@@ -58,7 +58,6 @@ CFLAGS += -I$(NANOPB_DIR)
 OBJECTS += drivers/max11300/max11300.o
 OBJECTS += drivers/ad9959/ad9959.o
 OBJECTS += minig.o
-OBJECTS += realtime.o
 
 SYS_OBJECTS += $(MBED)/drivers/AnalogIn.o
 SYS_OBJECTS += $(MBED)/drivers/BusIn.o

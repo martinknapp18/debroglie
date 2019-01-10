@@ -10,7 +10,7 @@ class MiniG {
 public:
   MiniG();
   void init();
-  virtual void run();
+  void run();
 
   struct dds_params_t {
     uint8_t mult;
@@ -26,11 +26,12 @@ public:
   };
 
 protected:
-  void reset(float var);
+  void reset(float var, bool k_up = true);
   void mot();
   void pgc();
-  void mw(int pulse);
-  void interferometry(uint32_t T, uint32_t fall, uint32_t raman);
+  void mw(int pulse, bool k_up = true);
+  void interferometry(uint32_t T, uint32_t fall, uint32_t raman,
+                      bool k_up = true);
   void image();
   void set_dds_params(dds_params_t params);
   void set_dds_params(double chirp_rate_kHz_p_ms, double raman_detuning_kHz);

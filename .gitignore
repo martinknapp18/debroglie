@@ -44,3 +44,6 @@ BUILD/*
 
 # Libraries
 /lib
+
+# Python environemnts
+nanopb_env/

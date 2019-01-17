@@ -1,3 +1,23 @@
+/***********************************
+Copyright ©2019. The Regents of the University of California (Regents). All Rights Reserved.
+Permission to use, copy, modify, and distribute this software and its documentation for
+educational, research, and not-for-profit purposes, without fee and without a signed licensing
+agreement, is hereby granted, provided that the above copyright notice, this paragraph and the
+following two paragraphs appear in all copies, modifications, and distributions. Contact The Office
+of Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley, CA 94720-1620,
+(510) 643-7201, otl@berkeley.edu, http://ipira.berkeley.edu/industry-info for commercial licensing
+opportunities.
+
+IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
+CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
+DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE AND ACCOMPANYING
+DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
+MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+***********************************/
+
 #ifndef _EXPERIMENT_MINIG_H_
 #define _EXPERIMENT_MINIG_H_
 
@@ -8,34 +28,19 @@
 
 class MiniG {
 public:
-  MiniG();
+  MiniG(bool k_up = true);
   void init();
   void run();
 
-  struct dds_params_t {
-    uint8_t mult;
-    uint32_t clk_transition_hex;
-    uint32_t chirp_start_hex;
-    uint32_t chirp_stop_hex;
-    uint32_t mw_time_hex;
-    uint32_t mw_freq_hex;
-    uint32_t chirp_time_hex;
-    uint32_t chirp_freq_hex;
-    double actual_chirp;
-    double detuning;
-  };
-
 protected:
-  void reset(float var, bool k_up = true);
+  void reset(float var);
   void mot();
   void pgc();
-  void mw(int pulse, bool k_up = true);
-  void interferometry(uint32_t T, uint32_t fall, uint32_t raman,
-                      bool k_up = true);
+  void mw(int pulse);
+  void interferometry(uint32_t T, uint32_t fall, uint32_t raman);
   void image();
-  void set_dds_params(dds_params_t params);
-  void set_dds_params(double chirp_rate_kHz_p_ms, double raman_detuning_kHz);
 
+  const bool k_up_;
   const uint32_t coils_;
   const uint32_t liquid_crystal_1_;
   const uint32_t under_vac_shutter_;

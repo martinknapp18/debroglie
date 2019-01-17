@@ -39,12 +39,12 @@ VPATH = ..
 ###############################################################################
 # Project settings
 
-PROJECT := DeBroglie
-MBED := mbed-os
-MBED_STM := $(MBED)/targets/TARGET_STM
-MBED_STM32F7 := $(MBED_STM)/TARGET_STM32F7
-MBED_STM32F746xG := $(MBED_STM32F7)/TARGET_STM32F746xG
-BSP := bsp
+PROJECT = MiniG
+MBED = mbed-os
+MBED_STM = $(MBED)/targets/TARGET_STM
+MBED_STM32F7 = $(MBED_STM)/TARGET_STM32F7
+MBED_STM32F746xG = $(MBED_STM32F7)/TARGET_STM32F746xG
+BSP = bsp
 
 # Project settings
 ###############################################################################
@@ -53,11 +53,21 @@ BSP := bsp
 # main
 OBJECTS += main.o
 
-CFLAGS += -I$(NANOPB_DIR)
 # drivers
 OBJECTS += drivers/max11300/max11300.o
 OBJECTS += drivers/ad9959/ad9959.o
+OBJECTS += util/dds_config.o
 OBJECTS += minig.o
+
+#### Protobuf Build
+# Include the nanopb provided Makefile rules
+include $(VPATH)/nanopb/extra/nanopb.mk
+
+# C source code files that are required
+OBJECTS += pb_encode.o  # The nanopb encoder
+OBJECTS += pb_decode.o  # The nanopb decoder
+OBJECTS += pb_common.o  # The nanopb common parts
+OBJECTS += gravity.pb.o                # The compiled protocol definition
 
 SYS_OBJECTS += $(MBED)/drivers/AnalogIn.o
 SYS_OBJECTS += $(MBED)/drivers/BusIn.o
@@ -256,8 +266,10 @@ INCLUDE_PATHS += -I../$(MBED)/drivers
 INCLUDE_PATHS += -I../$(MBED)/hal
 INCLUDE_PATHS += -I../$(MBED)/platform
 
+INCLUDE_PATHS += -I$(NANOPB_DIR)
+
 LIBRARY_PATHS := -L../$(MBED_STM32F746xG)/device/TOOLCHAIN_GCC_ARM
-# LIBRARIES := -l$(MBED) 
+# LIBRARIES := -l$(MBED)
 LINKER_SCRIPT ?= ../$(BSP)/STM32F746xG.ld
 
 # Objects and Paths
@@ -423,21 +435,19 @@ LD_SYS_LIBS :=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys -Wl,--en
 
 all: $(PROJECT).bin $(PROJECT).hex size
 
+# Build rule for the protocol
+gravity.pb.c: gravity.proto
+	$(PROTOC) $(PROTOC_OPTS) --nanopb_out=. --proto_path=$(VPATH) gravity.proto
 
 .s.o:
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Assemble: $(notdir $<)"
-  
 	@$(AS) -c $(ASM_FLAGS) -o $@ $<
   
-
-
 .S.o:
 	+@$(call MAKEDIR,$(dir $@))
 	+@echo "Assemble: $(notdir $<)"
-  
 	@$(AS) -c $(ASM_FLAGS) -o $@ $<
-  
 
 .c.o:
 	+@$(call MAKEDIR,$(dir $@))
@@ -449,17 +459,12 @@ all: $(PROJECT).bin $(PROJECT).hex size
 	+@echo "Compile: $(notdir $<)"
 	@$(CPP) $(CXX_FLAGS) $(INCLUDE_PATHS) -o $@ $<
 
-
 $(PROJECT).link_script.ld: $(LINKER_SCRIPT)
 	@$(PREPROC) $< -o $@
 
-
-
-$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld 
+$(PROJECT).elf: $(OBJECTS) $(SYS_OBJECTS) $(PROJECT).link_script.ld
 	+@echo "link: $(notdir $@)"
 	@$(LD) $(LD_FLAGS) -T $(filter-out %.o, $^) $(LIBRARY_PATHS) --output $@ $(filter %.o, $^) $(LIBRARIES) $(LD_SYS_LIBS)
-
-
 
 $(PROJECT).bin: $(PROJECT).elf
 	$(ELF2BIN) -O binary $< $@

@@ -1,4 +1,4 @@
-constexpr MiniG::dds_params_t inter_dds_params_0 = {
+constexpr DDSConfig::params_t inter_dds_params_0 = {
     .mult = 10,
     .clk_transition_hex = 0x20565b56,
     .chirp_start_hex = 0x22211bd9,
@@ -10,7 +10,7 @@ constexpr MiniG::dds_params_t inter_dds_params_0 = {
     .actual_chirp = 22.992026,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_1 = {
+constexpr DDSConfig::params_t inter_dds_params_1 = {
     .mult = 18,
     .clk_transition_hex = 0x11f7164c,
     .chirp_start_hex = 0x12f5f307,
@@ -22,7 +22,7 @@ constexpr MiniG::dds_params_t inter_dds_params_1 = {
     .actual_chirp = 22.992082,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_2 = {
+constexpr DDSConfig::params_t inter_dds_params_2 = {
     .mult = 12,
     .clk_transition_hex = 0x1af2a172,
     .chirp_start_hex = 0x1c70ec8a,
@@ -34,7 +34,7 @@ constexpr MiniG::dds_params_t inter_dds_params_2 = {
     .actual_chirp = 22.992141,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_3 = {
+constexpr DDSConfig::params_t inter_dds_params_3 = {
     .mult = 13,
     .clk_transition_hex = 0x18dff77d,
     .chirp_start_hex = 0x1a40da58,
@@ -46,7 +46,7 @@ constexpr MiniG::dds_params_t inter_dds_params_3 = {
     .actual_chirp = 22.992193,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_4 = {
+constexpr DDSConfig::params_t inter_dds_params_4 = {
     .mult = 19,
     .clk_transition_hex = 0x110507a6,
     .chirp_start_hex = 0x11f67a72,
@@ -58,7 +58,7 @@ constexpr MiniG::dds_params_t inter_dds_params_4 = {
     .actual_chirp = 22.992251,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_5 = {
+constexpr DDSConfig::params_t inter_dds_params_5 = {
     .mult = 17,
     .clk_transition_hex = 0x13059f23,
     .chirp_start_hex = 0x141379cb,
@@ -70,7 +70,7 @@ constexpr MiniG::dds_params_t inter_dds_params_5 = {
     .actual_chirp = 22.992302,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_6 = {
+constexpr DDSConfig::params_t inter_dds_params_6 = {
     .mult = 16,
     .clk_transition_hex = 0x1435f916,
     .chirp_start_hex = 0x1554b167,
@@ -82,7 +82,7 @@ constexpr MiniG::dds_params_t inter_dds_params_6 = {
     .actual_chirp = 22.992352,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_7 = {
+constexpr DDSConfig::params_t inter_dds_params_7 = {
     .mult = 17,
     .clk_transition_hex = 0x13059f23,
     .chirp_start_hex = 0x141379cb,
@@ -94,7 +94,7 @@ constexpr MiniG::dds_params_t inter_dds_params_7 = {
     .actual_chirp = 22.992413,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_8 = {
+constexpr DDSConfig::params_t inter_dds_params_8 = {
     .mult = 17,
     .clk_transition_hex = 0x13059f23,
     .chirp_start_hex = 0x141379cb,
@@ -106,7 +106,7 @@ constexpr MiniG::dds_params_t inter_dds_params_8 = {
     .actual_chirp = 22.992472,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_9 = {
+constexpr DDSConfig::params_t inter_dds_params_9 = {
     .mult = 11,
     .clk_transition_hex = 0x1d65c765,
     .chirp_start_hex = 0x1f06d37f,
@@ -118,7 +118,7 @@ constexpr MiniG::dds_params_t inter_dds_params_9 = {
     .actual_chirp = 22.992534,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_10 = {
+constexpr DDSConfig::params_t inter_dds_params_10 = {
     .mult = 17,
     .clk_transition_hex = 0x13059f23,
     .chirp_start_hex = 0x141379cb,
@@ -130,7 +130,7 @@ constexpr MiniG::dds_params_t inter_dds_params_10 = {
     .actual_chirp = 22.992600,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_11 = {
+constexpr DDSConfig::params_t inter_dds_params_11 = {
     .mult = 16,
     .clk_transition_hex = 0x1435f916,
     .chirp_start_hex = 0x1554b167,
@@ -142,7 +142,7 @@ constexpr MiniG::dds_params_t inter_dds_params_11 = {
     .actual_chirp = 22.992652,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_12 = {
+constexpr DDSConfig::params_t inter_dds_params_12 = {
     .mult = 15,
     .clk_transition_hex = 0x158ee78e,
     .chirp_start_hex = 0x16c0bd3b,
@@ -154,7 +154,7 @@ constexpr MiniG::dds_params_t inter_dds_params_12 = {
     .actual_chirp = 22.992706,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_13 = {
+constexpr DDSConfig::params_t inter_dds_params_13 = {
     .mult = 11,
     .clk_transition_hex = 0x1d65c765,
     .chirp_start_hex = 0x1f06d37f,
@@ -166,7 +166,7 @@ constexpr MiniG::dds_params_t inter_dds_params_13 = {
     .actual_chirp = 22.992759,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_14 = {
+constexpr DDSConfig::params_t inter_dds_params_14 = {
     .mult = 17,
     .clk_transition_hex = 0x13059f23,
     .chirp_start_hex = 0x141379cb,
@@ -178,7 +178,7 @@ constexpr MiniG::dds_params_t inter_dds_params_14 = {
     .actual_chirp = 22.992821,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_15 = {
+constexpr DDSConfig::params_t inter_dds_params_15 = {
     .mult = 11,
     .clk_transition_hex = 0x1d65c765,
     .chirp_start_hex = 0x1f06d37f,
@@ -190,7 +190,7 @@ constexpr MiniG::dds_params_t inter_dds_params_15 = {
     .actual_chirp = 22.992875,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_16 = {
+constexpr DDSConfig::params_t inter_dds_params_16 = {
     .mult = 18,
     .clk_transition_hex = 0x11f7164c,
     .chirp_start_hex = 0x12f5f307,
@@ -202,7 +202,7 @@ constexpr MiniG::dds_params_t inter_dds_params_16 = {
     .actual_chirp = 22.992929,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_17 = {
+constexpr DDSConfig::params_t inter_dds_params_17 = {
     .mult = 12,
     .clk_transition_hex = 0x1af2a172,
     .chirp_start_hex = 0x1c70ec8a,
@@ -214,7 +214,7 @@ constexpr MiniG::dds_params_t inter_dds_params_17 = {
     .actual_chirp = 22.992980,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_18 = {
+constexpr DDSConfig::params_t inter_dds_params_18 = {
     .mult = 19,
     .clk_transition_hex = 0x110507a6,
     .chirp_start_hex = 0x11f67a72,
@@ -226,7 +226,7 @@ constexpr MiniG::dds_params_t inter_dds_params_18 = {
     .actual_chirp = 22.993034,
     .detuning = 700.000000};
 
-constexpr MiniG::dds_params_t inter_dds_params_19 = {
+constexpr DDSConfig::params_t inter_dds_params_19 = {
     .mult = 12,
     .clk_transition_hex = 0x1af2a172,
     .chirp_start_hex = 0x1c70ec8a,
@@ -239,7 +239,7 @@ constexpr MiniG::dds_params_t inter_dds_params_19 = {
     .detuning = 700.000000};
 
 constexpr size_t NUM_POINTS_INTER = 20;
-constexpr MiniG::dds_params_t fringes[NUM_POINTS_INTER] = {
+constexpr DDSConfig::params_t fringes[NUM_POINTS_INTER] = {
     inter_dds_params_0,  inter_dds_params_1,  inter_dds_params_2,
     inter_dds_params_3,  inter_dds_params_4,  inter_dds_params_5,
     inter_dds_params_6,  inter_dds_params_7,  inter_dds_params_8,

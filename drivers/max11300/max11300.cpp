@@ -30,7 +30,7 @@
  * ownership rights.
  **********************************************************************/
 
-#include "bsm_delay.h"
+#include "cycle_count_delay.h"
 #include "max11300.h"
 
 namespace {
@@ -262,7 +262,7 @@ void MAX11300::run_ramps(RampAction *ramp_action) {
                        Callback<void(int)>(this, &MAX11300::spi_write_cb));
     while (!m_write_done)
       ;
-    bsm_delay_us(static_cast<uint32_t>(wait_time_us));
+    cycle_delay_us(static_cast<uint32_t>(wait_time_us));
   }
 }
 

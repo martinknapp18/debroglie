@@ -29,18 +29,20 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 class MiniG {
 public:
   MiniG(bool k_up = true);
-  void init();
-  void run();
+  virtual void init();
+  virtual void run();
 
 protected:
-  void reset(float var);
-  void mot();
-  void pgc();
-  void mw(int pulse);
-  void interferometry(uint32_t T, uint32_t fall, uint32_t raman);
-  void image();
+  virtual void reset(float var);
+  virtual void mot();
+  virtual void pgc();
+  virtual void mw(int pulse);
+  virtual void interferometry(uint32_t T, uint32_t fall, uint32_t raman);
+  virtual void image();
+  virtual void image_with_camera();
+  virtual void integrate();
 
-  const bool k_up_;
+  bool k_up_;
   const uint32_t coils_;
   const uint32_t liquid_crystal_1_;
   const uint32_t under_vac_shutter_;
@@ -64,6 +66,10 @@ protected:
   const uint32_t laser_jump_;
   const uint32_t m_horn_switch_;
 
+  // End of shot storage variables
+  float pd_fraction_;
+  uint32_t atom_number_;
+
   // Analog Outputs
   drivers::max11300::MAX11300::MAX11300_Ports ao1_freq_;
   drivers::max11300::MAX11300::MAX11300_Ports ao2_atten_;
@@ -73,8 +79,12 @@ protected:
   drivers::max11300::MAX11300::MAX11300_Ports we_field_;
   drivers::max11300::MAX11300::MAX11300_Ports eo_freq_;
   drivers::max11300::MAX11300::MAX11300_Ports bias_field_;
+
   // Analog Input
   drivers::max11300::MAX11300::MAX11300_Ports photodiode_;
+  drivers::max11300::MAX11300::MAX11300_Ports vibration_;
+  drivers::max11300::MAX11300::MAX11300_Ports tilt_x_;
+  drivers::max11300::MAX11300::MAX11300_Ports tilt_y_;
 
   SPI dds_spi_;
   drivers::ad9959::AD9959 dds_;

@@ -50,15 +50,6 @@ BSP = bsp
 ###############################################################################
 # Objects and Paths
 
-# main
-OBJECTS += main.o
-
-# drivers
-OBJECTS += drivers/max11300/max11300.o
-OBJECTS += drivers/ad9959/ad9959.o
-OBJECTS += util/dds_config.o
-OBJECTS += minig.o
-
 #### Protobuf Build
 # Include the nanopb provided Makefile rules
 include $(VPATH)/nanopb/extra/nanopb.mk
@@ -68,6 +59,16 @@ OBJECTS += pb_encode.o  # The nanopb encoder
 OBJECTS += pb_decode.o  # The nanopb decoder
 OBJECTS += pb_common.o  # The nanopb common parts
 OBJECTS += gravity.pb.o                # The compiled protocol definition
+
+# drivers
+OBJECTS += drivers/max11300/max11300.o
+OBJECTS += drivers/ad9959/ad9959.o
+OBJECTS += util/dds_config.o
+OBJECTS += minig.o
+OBJECTS += auto_g.o
+
+# main
+OBJECTS += main.o
 
 SYS_OBJECTS += $(MBED)/drivers/AnalogIn.o
 SYS_OBJECTS += $(MBED)/drivers/BusIn.o
@@ -438,6 +439,7 @@ all: $(PROJECT).bin $(PROJECT).hex size
 # Build rule for the protocol
 gravity.pb.c: gravity.proto
 	$(PROTOC) $(PROTOC_OPTS) --nanopb_out=. --proto_path=$(VPATH) gravity.proto
+	$(PROTOC) --python_out=/mnt/c/Users/Bola/Python\ Notebooks/AutoG/  --proto_path=$(VPATH) gravity.proto
 
 .s.o:
 	+@$(call MAKEDIR,$(dir $@))

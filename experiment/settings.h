@@ -54,7 +54,7 @@ constexpr float NS_IMAGE = 0.04;
 constexpr float WE_IMAGE = 0.25;
 constexpr float EO_IMAGE = 8.88;
 
-#define K_UP 0
+#define K_UP 1
 
 // DDS Paramaeters
 // TODO(split out for different experiment and maybe pass in as object)

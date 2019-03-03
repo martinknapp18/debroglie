@@ -4,21 +4,24 @@ syntax = "proto2";
 
 package minig;
 
-message DDS {
-    required uint32 mult = 1;
-    required uint32 clk_transition_hex = 2;
-    required uint32 chirp_start_hex = 3;
-    required uint32 chirp_stop_hex = 4;
-    required uint32 mw_time_hex = 5;
-    required uint32 mw_freq_hex = 6;
-    required uint32 chirp_time_hex = 7;
-    required uint32 chirp_freq_hex = 8;
-    required float actual_chirp = 9;
-    required float detuning = 10;
+message RunExperimentShot {
+    required uint32 T_ms = 1;
+    required uint32 mult = 2;
+    required uint32 clk_transition_hex = 3;
+    required uint32 chirp_start_hex = 4;
+    required uint32 chirp_stop_hex = 5;
+    required uint32 mw_time_hex = 6;
+    required uint32 mw_freq_hex = 7;
+    required uint32 chirp_time_hex = 8;
+    required uint32 chirp_freq_hex = 9;
+
+    // If negative, automatically implies k-down configuration.
+    required float actual_chirp = 10;
+    required float detuning = 11;
 }
 
-message FringeParams {
-    repeated DDS k_up_params = 1;
-    repeated DDS k_down_params = 2;
+message Result {
+  required float pd_fraction = 1;
+  required float atom_number = 2;
 }
 

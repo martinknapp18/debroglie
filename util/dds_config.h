@@ -28,6 +28,7 @@ namespace util {
 class DDSConfig
 {
   public:
+    // TODO(get rid of this old struct)
     struct params_t
     {
         uint8_t mult;
@@ -44,6 +45,7 @@ class DDSConfig
     
     void configure_up(drivers::ad9959::AD9959 dds, params_t params);
     void configure_down(drivers::ad9959::AD9959 dds, params_t params);
+
 };
 
 } // namespace util

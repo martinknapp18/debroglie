@@ -41,14 +41,16 @@ using drivers::ad9959::AD9959;
 using drivers::max11300::MAX11300;
 using util::DDSConfig;
 
-#define SPECTROSCOPY 0
-#define RAMAN_RABI 0
-#define MW_RABI 0
-#define INTER 1
-#define DEBUG_PD 0
 #define USE_CAMERA 0
-#define CENTER_PD 0
-#define TUNE 0
+#define STORE 0
+
+#if STORE
+#if !DEVICE_FLASH
+#error[NOT_SUPPORTED] Flash API not supported for this target
+#endif
+
+#include "FlashIAP.h"
+#endif
 
 namespace {
 
@@ -64,12 +66,35 @@ constexpr int16_t to_dac(double volts) {
   return static_cast<int16_t>(volts / 10.0 * 0x0fff);
 }
 
-constexpr size_t num_samples = 1200;
-uint16_t samples[num_samples];
+constexpr size_t num_pd_samples = 1200;
+uint16_t pd_samples[num_pd_samples];
 
 DDSConfig dds_config;
 
 #include "experiment/settings.h"
+
+#if STORE
+// Create flash IAP block device
+FlashIAP bd;
+
+char *storage_buff;
+size_t store_idx = 0;
+size_t page_addr = 0;
+
+
+template <class store_type>
+void store(store_type val) {
+  memcpy(&storage_buff[store_idx], &val, sizeof(store_type));
+  store_idx += sizeof(store_type);
+  if (store_idx == bd.get_page_size()) {
+    bd.program(storage_buff, page_addr, bd.get_page_size());
+    store_idx = 0;
+    page_addr += bd.get_page_size();
+  }
+}
+
+#endif
+
 } // namepsace
 
 // clang-format off
@@ -128,6 +153,13 @@ void MiniG::init() {
                STM_PIN_DATA(STM_MODE_OUTPUT_PP, GPIO_NOPULL, 0));
   pin_function(port_pin(PortG, 3),
                STM_PIN_DATA(STM_MODE_OUTPUT_PP, GPIO_NOPULL, 0));
+
+
+#if STORE
+  // Initialize the flash IAP block device and print the memory layout
+  bd.init();
+  storage_buff = (char *)malloc(bd.get_page_size());
+#endif
 
   // Ramps for Analog IO
   // clang-format off
@@ -233,65 +265,10 @@ void MiniG::reset(float var) {
   pixi_.single_ended_dac_write(eo_freq_, to_dac(EO_MOT));
   pixi_.single_ended_dac_write(bias_field_, to_dac(0));
 
-#if TUNE
-// pixi_.single_ended_dac_write(ao1_freq_, to_dac(var));
-// MAX11300::Ramp image_on_ramps[] = {
-//     {ao1_freq_, to_dac(AO1_RAMAN), to_dac(var)},
-//     {ao2_atten_, to_dac(AO2_RAMAN), to_dac(AO2_IMAGE)},
-//     {eo_freq_, to_dac(EO_RAMAN), to_dac(EO_IMAGE)},
-//     {ns_field_, to_dac(NS_RAMAN), to_dac(NS_IMAGE)},
-//     {we_field_, to_dac(WE_RAMAN), to_dac(WE_IMAGE)},
-// };
-// image_on_ramp_.configured = 1;
-// image_on_ramp_.num_ramps = ARRAYSIZE(image_on_ramps);
-// image_on_ramp_.num_steps = 30;
-// image_on_ramp_.step_time_us = 100;
-// pixi_.prepare_ramps(&image_on_ramp_, image_on_ramps);
-
-// MAX11300::Ramp pgc_on_ramps[] = {
-//     // {ao1_freq_, to_dac(AO1_MOT), to_dac(AO1_PGC)},
-//     {ao2_atten_, to_dac(AO2_MOT), to_dac(var)},
-//     {ao3_atten_, to_dac(AO3_MOT), to_dac(AO3_PGC)},
-//     {eo_freq_, to_dac(EO_MOT), to_dac(EO_PGC)},
-// };
-// pgc_on_ramp_.configured = 1;
-// pgc_on_ramp_.num_ramps = ARRAYSIZE(pgc_on_ramps);
-// pgc_on_ramp_.num_steps = 5;
-// pgc_on_ramp_.step_time_us = 100;
-// pixi_.prepare_ramps(&pgc_on_ramp_, pgc_on_ramps);
-
-#endif
   cycle_delay_ms(2);
 }
 
 void MiniG::run() {
-#if TUNE
-  for (float var = 6.4; var <= 7.5; var += 0.1) {
-#endif
-#if CENTER_PD
-  for (float d_fall = -3000; d_fall <= 0; d_fall += 500) {
-#endif
-#if MW_RABI
-  for (int pulse = 0; pulse <= 800; pulse += 20) {
-#endif
-#if RAMAN_RABI
-  for (uint32_t raman = 0; raman <= 30; raman += 1) {
-    if (k_up_) {
-      dds_config.configure_up(dds_, fringes[0]);
-    } else {
-      dds_config.configure_down(dds_, fringes[0]);
-    }
-#endif
-#if SPECTROSCOPY
-  for (size_t j = 0; j < NUM_POINTS_SPEC; j++) {
-    if (k_up_) {
-      dds_config.configure_up(dds_, specs[j]);
-    } else {
-      dds_config.configure_down(dds_, specs[j]);
-    }
-
-#endif
-#if INTER
   for (size_t j = 0; j < NUM_POINTS_INTER; j++) {
     if (k_up_) {
       dds_config.configure_up(dds_, fringes[j]);
@@ -299,87 +276,37 @@ void MiniG::run() {
       dds_config.configure_down(dds_, fringes[j]);
     }
 
-#endif
-#if TUNE
-    reset(var);
-#else
     reset(AO1_MOT);
-#endif
     mot();
     pgc();
 
-#if !MW_RABI
     int pulse = 300;
-#endif
     mw(pulse);
     uint32_t T = 129;
     float fall_ms = 0.5;
     uint32_t fall_us = static_cast<uint32_t>(fall_ms * 1000);
-#if CENTER_PD
-    fall_us += d_fall;
-#endif
 
-#if !RAMAN_RABI
     uint32_t raman = 8;
-#endif
     interferometry(T, fall_us, raman);
 
-    image();
 #if USE_CAMERA
-    cycle_delay_ms(300);
+    image_with_camera();
+#else
+    image();
 #endif
 
-#if SPECTROSCOPY
-    printf("rd: %f\n", specs[j].detuning);
-#elif INTER
+    integrate();
+
+#if STORE
+    store<float>(fringes[j].actual_chirp);
+    store<float>(pd_fraction_);
+    store<uint32_t>(atom_number_);
+#else
     printf("rd: %f\n", fringes[j].actual_chirp);
-#elif MW_RABI
-    printf("rd: %d\n", pulse);
-#elif RAMAN_RABI
-    printf("rd: %lu\n", raman);
-#elif CENTER_PD
-    printf("rd: %f\n", d_fall);
-#elif TUNE
-    printf("rd: %f\n", var);
+    printf("fr: %f\n", pd_fraction_);
+    printf("atom_num: %lu\n\n", atom_number_);
 #endif
-    uint32_t f4 = 0, f34 = 0, bg = 6;
-    size_t i = 0;
-#if DEBUG_PD
-    printf("ListPlot[{");
-#endif
-    for (; i < 127; i++) {
-      f4 += samples[i];
-#if DEBUG_PD
-      printf("%d,", samples[i]);
-#endif
-    }
-    for (; i < 127 + 127; i++) {
-      f34 += samples[i];
-#if DEBUG_PD
-      printf("%d,", samples[i]);
-#endif
-    }
-    for (; i < 127 + 127 + 127; i++) {
-      bg += samples[i];
-#if DEBUG_PD
-      printf("%d,", samples[i]);
-#endif
-    }
-#if DEBUG_PD
-    printf("}]\n\n");
-#endif
-    double detection =
-      (static_cast<double>(f4) - static_cast<double>(bg)) /
-      (static_cast<double>(f34) - static_cast<double>(bg));
-#if MW_RABI | CENTER_PD | TUNE
-    printf("fr: %lu\n", f34 - bg);
-#elif RAMAN_RABI | SPECTROSCOPY | INTER
-    printf("fr: %f\n", detection);
-    printf("atom_num: %lu\n\n", f34 - bg);
-#endif
-#if CENTER_PD | RAMAN_RABI | SPECTROSCOPY | INTER | MW_RABI | TUNE
   }
-#endif
 }
 
 void MiniG::mot() {
@@ -506,39 +433,89 @@ void MiniG::image() {
 
   // Turn laser on
   WRITE_IO(GPIOE, m_lock_ | ao_3_
-#if USE_CAMERA
-  | camera_ttl_
-#endif
   , BITS_NONE);
   // TODO(bsm): write code for this in a minute
   cycle_delay_us(20);
-  pixi_.max_speed_adc_read(photodiode_, samples, 127);
+  pixi_.max_speed_adc_read(photodiode_, pd_samples, 127);
 
   // Repumping Stage
   WRITE_IO(GPIOE, ao_2_, BITS_NONE
-#if USE_CAMERA
-  | camera_ttl_
-#endif
   );
   cycle_delay_us(150);
 
   // Second Sample
   WRITE_IO(GPIOE, BITS_NONE, ao_2_);
-  pixi_.max_speed_adc_read(photodiode_, &samples[127], 127);
+  pixi_.max_speed_adc_read(photodiode_, &pd_samples[127], 127);
 
   // Wait before background
   cycle_delay_ms(5);
 
   // Third detection for background
-  pixi_.max_speed_adc_read(photodiode_, &samples[127 + 127], 127);
+  pixi_.max_speed_adc_read(photodiode_, &pd_samples[127 + 127], 127);
 
-#if USE_CAMERA
+}
+void MiniG::image_with_camera() {
+  WRITE_IO(GPIOE, cooling_shutter_ | dds_switch_ | raman_eo_,
+           BITS_NONE);
+  pixi_.run_ramps(&image_on_ramp_);
+  // takes 3 ms
+  cycle_delay_ms(7);
+
+  // Stabilize
+  WRITE_IO(GPIOE, BITS_NONE, mot_eo_);
+  cycle_delay_ms(1);
+  cycle_delay_us(50);
+
+  // Turn laser on
+  WRITE_IO(GPIOE, m_lock_ | ao_3_
+  | camera_ttl_
+  , BITS_NONE);
+  // TODO(bsm): write code for this in a minute
+  cycle_delay_us(20);
+  pixi_.max_speed_adc_read(photodiode_, pd_samples, 127);
+
+  // Repumping Stage
+  WRITE_IO(GPIOE, ao_2_, BITS_NONE
+  | camera_ttl_
+  );
+  cycle_delay_us(150);
+
+  // Second Sample
+  WRITE_IO(GPIOE, BITS_NONE, ao_2_);
+  pixi_.max_speed_adc_read(photodiode_, &pd_samples[127], 127);
+
+  // Wait before background
+  cycle_delay_ms(5);
+
+  // Third detection for background
+  pixi_.max_speed_adc_read(photodiode_, &pd_samples[127 + 127], 127);
+
   // Wait long time before Camera Background
   cycle_delay_ms(40);
 
   // Take background image
   WRITE_IO(GPIOE, camera_ttl_, BITS_NONE);
 
-  cycle_delay_ms(10);
-#endif
+  cycle_delay_ms(310);
+}
+
+
+void MiniG::integrate() {
+    uint32_t f4 = 0, f34 = 0, bg = 6;
+    size_t i = 0;
+    for (; i < 127; i++) {
+      f4 += pd_samples[i];
+    }
+    for (; i < 127 + 127; i++) {
+      f34 += pd_samples[i];
+    }
+    for (; i < 127 + 127 + 127; i++) {
+      bg += pd_samples[i];
+    }
+    double detection =
+      (static_cast<double>(f4) - static_cast<double>(bg)) /
+      (static_cast<double>(f34) - static_cast<double>(bg));
+    // printf("atom_num: %lu\n\n", f34 - bg);
+    atom_number_ = f34 - bg;
+    pd_fraction_ = detection;
 }

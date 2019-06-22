@@ -13,6 +13,26 @@ Please refer to the hardware schematic for setting up the system using [Nucleo-F
 Make a virtual environement and install the requirements.txt file
 Source the environment before building as it is required to build the protobuf library.
 
+## Code Structure
+Comments next to directory name indicate at a high level the code inside each.
+```
+├── bsp # Board Support Package.
+├── dds_params # Header files to configure DDS
+├── desktop # Code to run from desktop client 
+│   ├── auto_g # Scripts to automatically zoom and find gravity
+│   ├── notebooks # Post processing including fitting fringes and finding gravity
+│   └── scripts # Scripts to store the data and plot while running
+├── drivers # For peripherals
+│   ├── ad9959 # DDS driver
+│   └── max11300 # ADC DAC driver
+├── experiment # Header file with experiment settings and variables
+├── hardware # Hardware schematics for replicating setup
+├── mbed-os # MBED library.
+├── nanopb # Library for sending data back and forth to computer.
+└── util # Macros and other useful shorthands.
+```
+
+
 ## Copyright
 ###UC Berkeley's Standard Copyright and Disclaimer Notice
 Copyright ©2019. The Regents of the University of California (Regents). All Rights Reserved. Permission to use, copy, modify, and distribute this software and its documentation for educational, research, and not-for-profit purposes, without fee and without a signed licensing agreement, is hereby granted, provided that the above copyright notice, this paragraph and the following two paragraphs appear in all copies, modifications, and distributions. Contact The Office of Technology Licensing, UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley, CA 94720-1620, (510) 643-7201, otl@berkeley.edu, http://ipira.berkeley.edu/industry-info for commercial licensing opportunities.
